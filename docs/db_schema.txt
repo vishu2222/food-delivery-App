@@ -1,0 +1,63 @@
+--Customer
+id:                   serial P.K 
+userName:             varchar not null
+password:             varchar not null
+name:                 varchar 
+phone:                varchar
+email:                varchar
+location:             ?
+
+
+--Address
+id:                   serial P.K 
+customer_id           F.K
+delivary_address      varchar
+permanent_address     varchar
+
+
+--DeliveryAgent
+id:                   serial P.K
+Name:                 VARCHAR NOT NULL
+current-location:     ? 
+Availability:         BOOLEAN
+phone:                number
+
+
+--Resturant
+id:                   serial
+Name:                 varchar not null
+location:             ?
+phone:                number
+closed:               BOOLEAN
+
+
+--Item
+id:                   serial
+item_name:            varchar not null
+Availability          BOOLEAN
+price:                number not null
+resturent_id:         F.K
+
+
+--Orders
+id:                   serial
+order_time            timestamp
+delivary_time         timestamp
+Total-price           float not null
+distance              float
+order-status          varchar check(delivered, cancelled, on transit)
+payment               BOOLEAN
+resturent_id          F.K
+agent_id              F.K
+
+
+--Order-Items
+id:                   serial
+order-id:             F.K
+item-id:              F.K
+quantity:             Number not null
+
+
+
+
+ 
