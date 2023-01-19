@@ -13,5 +13,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "pg": "^8.8.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0"
   }
 }
