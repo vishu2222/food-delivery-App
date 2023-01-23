@@ -4,4 +4,4 @@ import { getRestaruantsList, getMenu } from '../controllers/restaurantController
 export const router = express.Router()
 
 router.get('/', getRestaruantsList)
-router.get('/:id', getMenu)
+router.get('/:id/menu', getMenu) //
