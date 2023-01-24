@@ -1,9 +1,7 @@
-import '../styles/Home.css'
-import React from 'react'
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import './styles/home.css'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { getRestaurants } from '../requests'
-import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setFocusedRestaurant } from '../slices/restaurantSlice'
 
@@ -12,16 +10,16 @@ export function Home() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  function showMenu(restaurantId) {
-    dispatch(setFocusedRestaurant(restaurantId))
+  function showMenu(restaurant) {
+    const restaurantId = restaurant.restaurant_id
+    dispatch(setFocusedRestaurant(restaurant))
     navigate(`/menu/${restaurantId}`)
   }
 
   useEffect(() => {
-    // add named function function
     ;(async () => {
       const restaurantList = await getRestaurants()
-      console.log(restaurantList)
+      console.log('restaurantList:', restaurantList)
       setRestaurants(() => restaurantList)
     })()
   }, [])
@@ -35,7 +33,7 @@ export function Home() {
       <div id='restarunats'>
         {restaurants.map((restaurant, index) => {
           return (
-            <div onClick={() => showMenu(restaurant.restaurant_id)} key={index}>
+            <div onClick={() => showMenu(restaurant)} key={index}>
               <img src={restaurant.img} alt='img' />
               <p>{restaurant.name}</p>
             </div>

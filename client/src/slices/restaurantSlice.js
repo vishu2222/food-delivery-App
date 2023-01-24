@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  restaurantId: ''
+  restaurant: ''
 }
 
 export const restaurantSlice = createSlice({
@@ -9,7 +9,8 @@ export const restaurantSlice = createSlice({
   initialState,
   reducers: {
     setFocusedRestaurant: (state, action) => {
-      state.restaurantId = action.payload
+      console.log('resAction:', action)
+      state.restaurant = action.payload
     }
   }
 })
