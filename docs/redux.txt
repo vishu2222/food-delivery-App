@@ -1,0 +1,46 @@
+Redux:
+*   Redux is a JavaScript library for managing application state. It is often used with React, but can be used with any view library.
+Redux helps manage the state of an application in a centralized store, and uses a strict unidirectional data flow, making it 
+easier to understand and debug the state of the application.
+
+
+Redux:
+*   Redux is a JavaScript library used for centralizing and managing state. its popularly used with react and other front end libraries
+*   The global state of an application is an object tree called a store. 
+*   state is updated using events called actions
+
+
+Redux key components:
+*  Store: The store is an object that holds the application's state. It is the single source of truth for the state of the application.
+*  Actions: Actions are plain JavaScript objects that describe an event that should change the state of the application. They are dispatched to the store and trigger a state change.
+*  Reducers: Reducers are pure functions that take the current state of the application and an action, and return a new state.
+   They specify how the state of the application should be updated in response to an action. Reducers take action and state and 
+   return new state. i.e Reducer(action, state) ---> new state. Reducers shouldnt mutate state or cause any side-effects, or do 
+   any asynchronus logic 
+*  Dispatcher: A function that dispatches actions to the reducers, and updates the state of the store.
+*  Subscriber: A function that listens for changes to the state of the store, and updates the UI accordingly.
+*  Middleware : Middleware are the additional layer between the dispatching an action and the store, it helps to modify or add some functionality before it reaches to the store.
+
+
+Redux-working:
+https://d33wubrfki0l68.cloudfront.net/01cc198232551a7e180f4e9e327b5ab22d9d14e7/b33f4/assets/images/reduxdataflowdiagram-49fa8c3968371d9ef6f2a1486bd40a26.gif
+* The center of redux is the redux-store which is a JS object. 
+* Redux-store contains the state to which we have Subscribers(ex: UI elements that relies on stores state).
+* The state is updated  by dispatching an action object to the store.
+* The store updates the state using the action object and the old state then notifies the subscribers.
+* The action object has a type attribute(string) whose value describe the type of action to perfom on the state
+* The initial state is defined in a reducer function. The reducer function recieves two arguments state and action object
+
+
+setup:
+*  Define a reducer which sets up the initial state(store instance when called) and can recieve action and state(default initially) to
+   return a new updated state
+*  Create a store instance using the defined reducer
+*  Add subscribers to that listen to store updates
+*  Create action objects to dispatch an action to the store to update the store
+
+
+
+Redux toolkit:
+
+* Configuring redux is too complicated. Needs to add lots of packages and boiler plate code
