@@ -1,12 +1,11 @@
 import React from 'react'
 import './styles/cart.css'
-import { useDispatch, useSelector } from 'react-redux'
-// import { incrementItem } from '../slices/cartSlice'
+import { useSelector } from 'react-redux'
 import CartItem from './CartItem'
 
 function Cart() {
-  const dispatch = useDispatch()
   const cart = useSelector((state) => state.cartItems.cart)
+  const total = cart.reduce((sum, item) => sum + item.count * item.price, 0)
 
   return (
     <div id='cart'>
@@ -14,6 +13,9 @@ function Cart() {
       {cart.map((item, index) => {
         return <CartItem key={index} cartItem={item} />
       })}
+      <p>
+        <strong>Total:</strong> {total}
+      </p>
     </div>
   )
 }
