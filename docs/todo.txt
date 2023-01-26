@@ -1,0 +1,56 @@
+1) learn redux add to cart
+2) follow rest-api convensions
+3) check cors and change to *
+4) db validations for mobile number and other attributes
+5) use redux persist
+6) Error handling with Error class
+7) serving static files from Express
+8) element.innerHtml vs element.textContent vs element.text
+9) use custom hooks
+10) faker js 
+11) 
+
+
+
+
+
+Learn:
+1) 
+2) css modules and tailwind
+3) what is state in react, programming and web applications?
+4) query params in fetch request and corresponding server api example
+5) what is refresh and access token and how to work with them?
+6) what are cookies
+7) security issues and authentication
+8) advantages of react over vanilla-js
+9) config file
+10) unit tests
+11) how to seperate components from pages
+12) learn usememo, thunk, redux
+13) learn catching, pagination
+14) http server
+15) debouncing and throttling
+16) what does useDispatch() do ?
+17) common-js vs module exports default and named exports
+
+
+
+
+
+Experiments to do:
+1) what happens if same named export in two different modules are imported inot an application file?
+2) onclick = {handleClick} vs {handleclick()}
+
+
+questions:
+1) why do we not use only sockets instead of http? as sockets connection persists unlike http isnt it a better 
+idea to always use sockets instead of http?
+
+2) what is better and why? should i get restaurants and menus or menu on restaurant click
+
+3) is it ok to store phone numbers in varchar?
+
+
+checks:
+
+if item_id is a string
