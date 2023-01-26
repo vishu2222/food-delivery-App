@@ -1,0 +1,27 @@
+### app requirements
+
+1. New Customers register on  website 
+2. App need to get access to customer location if location access is granted else customer manually types location or set a default location
+3. customers need access to search food-items and restaruents filtering by distance. landing page should have this search bar and
+   food items or resturents sorted by delivary time or distance or better. treanding searches or recent searches etc.
+4. Customers login on website (  sessions)
+5. If customer types resturent name or item name relevent results are displalyed.
+6. for resturent search show matching resturents, distance, img, ratings,.... then on resturent click show items available, price..etc
+7. for food-item search show near by resturents having that food-item, price, distance, ratings, time filters on the same
+8. customer adds items to kart then we show total price, quantity, remove cart items of other resturents
+9. customer checkouts and places order. This redirects to payment. On confirmation delivary agent needs to be assigned.
+10. search for nearby available delivary agents and notify for confirmation. Allot the delivary to the first nearby respondent.
+11. notify customer about transit and estimated delivary time,
+12. track the location and notify customer
+13. notify customer about delivary upon completion
+
+Involved Entites:          attributes:                                                 
+
+customers                 (name, pwd, email,phone,address, location)
+food-items                (item-name, category,img,price,quantity)
+restaurants               (location, name,phone, ratings,img, closed?) 
+delivary-agent            (name,phone, location)
+orders(cart)              (payment-done?, restaurant,customer,assignedAgent, delivaryStatus?, customer rating, delivary-time)
+
+derived:
+(distance, delivary-time)
