@@ -11,3 +11,13 @@ export async function getMenu(id) {
   const data = await res.json()
   return data.menu
 }
+
+export async function placeOrder(cart) {
+  console.log('cartItemsInplaceOrder', cart)
+  const res = await fetch(`${baseUrl}/orders/new`, {
+    headers: { 'content-type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify(cart)
+  })
+  return res.status
+}
