@@ -8,12 +8,11 @@ export const restaurantSlice = createSlice({
   name: 'focusedRestaurant',
   initialState,
   reducers: {
-    setFocusedRestaurant: (state, action) => {
-      console.log('resAction:', action)
+    focusedRestaurant: (state, action) => {
       state.restaurant = action.payload
     }
   }
 })
 
-export const { setFocusedRestaurant } = restaurantSlice.actions
+export const { focusedRestaurant } = restaurantSlice.actions
 export default restaurantSlice.reducer
