@@ -1,20 +1,14 @@
 import './styles/home.css'
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { getRestaurants } from '../requests'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { setFocusedRestaurant } from '../slices/restaurantSlice'
+import { getRestaurants } from '../requests'
+import { focusedRestaurant } from '../slices/restaurantSlice'
 
 export function Home() {
-  const [restaurants, setRestaurants] = useState([])
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
-  function showMenu(restaurant) {
-    const restaurantId = restaurant.restaurant_id
-    dispatch(setFocusedRestaurant(restaurant))
-    navigate(`/menu/${restaurantId}`)
-  }
+  const [restaurants, setRestaurants] = useState([])
 
   useEffect(() => {
     ;(async () => {
@@ -24,12 +18,14 @@ export function Home() {
     })()
   }, [])
 
+  function showMenu(restaurant) {
+    const restaurantId = restaurant.restaurant_id
+    dispatch(focusedRestaurant(restaurant))
+    navigate(`/menu/${restaurantId}`)
+  }
+
   return (
     <div id='home'>
-      <div id='nav-div'>
-        <Link to='/signup'>signup </Link>
-        <Link to='/login'>login</Link>
-      </div>
       <div id='restarunats'>
         {restaurants.map((restaurant, index) => {
           return (
