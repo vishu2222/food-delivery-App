@@ -11,12 +11,12 @@ const pool = new Pool({
 })
 
 export async function getRestaruants() {
-  const res = await pool.query('select * from restaurants')
+  const res = await pool.query('SELECT * FROM restaurants')
   return res.rows
 }
 
 export async function getRestaurantMenu(restaurant_id) {
-  const res = await pool.query('select * from foodItems where restaurant_id = $1;', [restaurant_id])
+  const res = await pool.query('SELECT * FROM foodItems WHERE restaurant_id = $1;', [restaurant_id])
   return res.rows
 }
 
@@ -24,7 +24,9 @@ async function getTotalPrice(clientCart, client) {
   let totalPrice = 0
   const itemIds = clientCart.map((item) => item.item_id)
   const result = await client.query(
-    'select item_id, price from foodItems where item_id = ANY($1::int[])',
+    `SELECT item_id, price 
+     FROM foodItems 
+     WHERE item_id = ANY($1)`,
     [itemIds]
   )
   const dbCart = result.rows
@@ -38,7 +40,7 @@ async function getTotalPrice(clientCart, client) {
 
 export async function getOrderId(orderTime, client) {
   const response = await client.query(
-    `select * from orders where order_time =  to_timestamp($1/1000.0)`,
+    `SELECT * FROM orders WHERE order_time =  to_timestamp($1/1000.0)`,
     [orderTime]
   )
   return response.rows[0].order_id
@@ -56,8 +58,8 @@ export async function placeOrder(order) {
     await client.query('BEGIN')
     const totalPrice = await getTotalPrice(order, client)
 
-    const query = `insert into orders(order_time, total_price, payment_done, delivary_status, restaurant_id, agent_id) 
-                   values ( to_timestamp($1/1000.0), $2, $3, $4, $5, $6)`
+    const query = `INSERT INTO orders(order_time, total_price, payment_done, delivary_status, restaurant_id, agent_id) 
+                   VALUES ( to_timestamp($1/1000.0), $2, $3, $4, $5, $6)`
     const params = [orderTime, totalPrice, paymentDone, delivaryStatus, restaurantId, agentId]
 
     await client.query(query, params)
@@ -66,7 +68,7 @@ export async function placeOrder(order) {
     for (let item of order) {
       const itemId = item.item_id
       const quantity = item.count
-      const query = `insert into order_items(order_id, item_id, quantity) values ($1, $2, $3)`
+      const query = `INSERT INTO order_items(order_id, item_id, quantity) VALUES ($1, $2, $3)`
       const params = [orderId, itemId, quantity]
       await client.query(query, params)
     }
