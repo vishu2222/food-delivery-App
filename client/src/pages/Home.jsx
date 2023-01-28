@@ -14,7 +14,7 @@ export function Home() {
     ;(async () => {
       const restaurantList = await getRestaurants()
       console.log('restaurantList:', restaurantList)
-      setRestaurants(() => restaurantList)
+      setRestaurants(restaurantList)
     })()
   }, [])
 
@@ -26,7 +26,7 @@ export function Home() {
 
   return (
     <div id='home'>
-      <div id='restarunats'>
+      <div id='restaurants'>
         {restaurants.map((restaurant, index) => {
           return (
             <div onClick={() => showMenu(restaurant)} key={index}>
