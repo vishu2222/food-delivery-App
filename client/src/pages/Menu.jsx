@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import { getMenu } from '../requests'
+import { getMenu, placeOrder } from '../requests'
 import { useSelector } from 'react-redux'
-import { placeOrder } from '../requests'
 import MenuItem from '../components/MenuItem'
 import Cart from '../components/Cart.jsx'
 
 export function Menu() {
   const [menu, setMenu] = useState([])
-  const [displayStatus, setDisplayStatus] = useState(false)
   const [displayMsg, setDisplayMsg] = useState('')
   const restaurant = useSelector((state) => state.focusedRestaurant.restaurant)
   const restaurantId = restaurant.restaurant_id
@@ -18,25 +16,18 @@ export function Menu() {
     ;(async () => {
       const menuList = await getMenu(restaurantId)
       console.log('menuList', menuList)
-      setMenu(() => menuList)
+      setMenu(menuList)
     })()
   }, [restaurantId])
 
   async function order() {
     setDisplayMsg('processing order...')
-    setDisplayStatus(true)
     const status = await placeOrder(cartItems)
     if (status !== 200) {
-      setDisplayMsg('unable to place order')
+      setDisplayMsg('sorry, unable to place order')
     } else {
-      setDisplayMsg('order placed')
+      setDisplayMsg('order placed, your food is on the way')
     }
-
-    // // console.log('...', cartItems)
-    // let orderCart = JSON.parse(JSON.stringify(cartItems))
-    // console.log('orderCart', orderCart)
-    // // orderCart = orderCart.map((item) => Object.create({ ...item }))
-    // placeOrder(orderCart)
   }
 
   return (
@@ -48,7 +39,7 @@ export function Menu() {
           <MenuItem item={item} key={index} />
         ))}
       </div>
-      {displayStatus && <h2>{displayMsg}</h2>}
+      {<h2>{displayMsg}</h2>}
       <div id='cart'>
         <Cart />
         <button onClick={order}>Place order</button>
