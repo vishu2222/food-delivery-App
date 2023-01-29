@@ -11,80 +11,34 @@ const pool = new Pool({
 })
 
 export async function getRestaruants() {
-  const res = await pool.query('SELECT * FROM restaurants')
+  const res = await pool.query('SELECT * FROM restaurant')
   return res.rows
 }
 
 export async function getRestaurantMenu(restaurant_id) {
-  const res = await pool.query('SELECT * FROM foodItems WHERE restaurant_id = $1;', [restaurant_id])
+  const res = await pool.query('SELECT * FROM food_item  WHERE restaurant_id = $1;', [
+    restaurant_id
+  ])
   return res.rows
 }
 
-async function getTotalPrice(clientCart, client) {
-  let totalPrice = 0
-  const itemIds = clientCart.map((item) => item.item_id)
-  const result = await client.query(
-    `SELECT item_id, price 
-     FROM foodItems 
-     WHERE item_id = ANY($1)`,
-    [itemIds]
+export async function getItemPrices(itemIds, restaurantId) {
+  const res = await pool.query(
+    `SELECT item_id, price
+     FROM food_item
+     WHERE item_id = ANY($1) AND restaurant_id = $2`,
+    [itemIds, restaurantId]
   )
-  const dbCart = result.rows
-  dbCart.forEach((item) => {
-    const price = item.price
-    const quantity = clientCart.find((i) => i.item_id === item.item_id).count
-    totalPrice += price * quantity
-  })
-  return totalPrice
+  return res.rows
 }
 
-export async function getOrderId(orderTime, client) {
-  const response = await client.query(
-    `SELECT * FROM orders WHERE order_time =  to_timestamp($1/1000.0)`,
-    [orderTime]
-  )
-  return response.rows[0].order_id
+export async function placeOrder(restaurantId, totalAmount, orderItems, orderTime, customerId) {
+  const query = `INSERT INTO orders(order_time, total_price, customer_id, restaurant_id, order_items) 
+                 values (to_timestamp($1/1000.0), $2, $3 , $4, $5);`
+  const params = [orderTime, totalAmount, customerId, restaurantId, orderItems]
+  await pool.query(query, params)
 }
 
-export async function placeOrder(order) {
-  const orderTime = Date.now()
-  const paymentDone = 'true'
-  const delivaryStatus = 'pending'
-  const restaurantId = order[0].restaurant_id
-  const agentId = 1
-  const client = await pool.connect()
-
-  try {
-    await client.query('BEGIN')
-    const totalPrice = await getTotalPrice(order, client)
-
-    const query = `INSERT INTO orders(order_time, total_price, payment_done, delivary_status, restaurant_id, agent_id) 
-                   VALUES ( to_timestamp($1/1000.0), $2, $3, $4, $5, $6)`
-    const params = [orderTime, totalPrice, paymentDone, delivaryStatus, restaurantId, agentId]
-
-    await client.query(query, params)
-    const orderId = await getOrderId(orderTime, client)
-
-    for (let item of order) {
-      const itemId = item.item_id
-      const quantity = item.count
-      const query = `INSERT INTO order_items(order_id, item_id, quantity) VALUES ($1, $2, $3)`
-      const params = [orderId, itemId, quantity]
-      await client.query(query, params)
-    }
-
-    // await client.query('invalid query')
-    await client.query('COMMIT')
-    return 'orderPlaced'
-  } catch (err) {
-    client.query('ROLLBACK')
-    throw new Error('orderFailed')
-  } finally {
-    client.release()
-  }
-}
-
-// case res_id not same for items,
 // res_id or agent_id is undefined or null,
 // case
 
