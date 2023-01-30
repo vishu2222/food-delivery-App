@@ -7,14 +7,14 @@ export async function getRestaurants() {
 }
 
 export async function getMenu(id) {
-  const res = await fetch(`${baseUrl}/restaurants/${id}/menu`)
+  const res = await fetch(`${baseUrl}/restaurants/${id}`)
   const response = await res.json()
   return response.data
 }
 
 export async function placeOrder(cart) {
   console.log('cartItemsInplaceOrder', cart)
-  const res = await fetch(`${baseUrl}/orders/new`, {
+  const res = await fetch(`${baseUrl}/orders`, {
     headers: { 'content-type': 'application/json' },
     method: 'POST',
     body: JSON.stringify(cart)
