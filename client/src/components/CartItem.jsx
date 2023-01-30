@@ -1,11 +1,10 @@
 import React from 'react'
 
-function CartItem({ cartItem }) {
-  //   console.log('from cartItem:', cartItem)
+function CartItem({ item }) {
   return (
     <div>
-      <strong>{cartItem.name} quantity: </strong>
-      {cartItem.count} ₹{cartItem.count * cartItem.price}
+      <strong>{item.item_name} quantity: </strong>
+      {item.quantity} ₹{item.quantity * item.price}
     </div>
   )
 }

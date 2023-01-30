@@ -1,20 +1,19 @@
 import React from 'react'
-import './styles/cart.css'
-import { useSelector } from 'react-redux'
 import CartItem from './CartItem'
+import { useSelector } from 'react-redux'
 
 function Cart() {
-  const cart = useSelector((state) => state.cartItems.cart)
-  const total = cart.reduce((sum, item) => sum + item.count * item.price, 0)
+  const cart = useSelector((state) => state.cart)
+  const total = cart.reduce((sum, item) => sum + item.quantity * item.price, 0)
 
   return (
     <div id='cart'>
       <p>Cart</p>
       {cart.map((item, index) => {
-        return <CartItem key={index} cartItem={item} />
+        return <CartItem key={index} item={item} />
       })}
       <p>
-        <strong>Total:</strong> {total}
+        <strong>Total:</strong> ₹{total}
       </p>
     </div>
   )

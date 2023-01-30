@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getRestaurants } from '../requests'
-import { focusedRestaurant } from '../slices/restaurantSlice'
+import { setFocusedRestaurant } from '../store/actions'
 
-export function Home() {
+export default function Home() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [restaurants, setRestaurants] = useState([])
@@ -19,8 +19,10 @@ export function Home() {
   }, [])
 
   function showMenu(restaurant) {
+    // console.log('restaurant', restaurant)
     const restaurantId = restaurant.restaurant_id
-    dispatch(focusedRestaurant(restaurant))
+    // console.log('restaurantId:', restaurantId)
+    dispatch(setFocusedRestaurant(restaurant))
     navigate(`/menu/${restaurantId}`)
   }
 
@@ -31,7 +33,10 @@ export function Home() {
           return (
             <div onClick={() => showMenu(restaurant)} key={index}>
               <img src={restaurant.img} alt='img' />
-              <p>{restaurant.name}</p>
+              <p>{restaurant.restaurant_name}</p>
+              <p>startTime:{restaurant.start_time}</p>
+              <p>closeTime:{restaurant.close_time}</p>
+              <p>phone:{restaurant.phone}</p>
             </div>
           )
         })}
