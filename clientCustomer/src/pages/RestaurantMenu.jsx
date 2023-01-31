@@ -44,10 +44,6 @@ function RestaurantMenu() {
     }
   }
 
-  //   function resetItem(setQuantity) {
-  //     setQuantity('Add')
-  //   }
-
   return (
     <div id='menu-page'>
       <div id='focused-restaurant'>Restaurant-Name: {restaurant.restaurant_name}</div>

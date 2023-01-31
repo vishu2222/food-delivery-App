@@ -1,6 +1,5 @@
 import React from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart, incrementCartItem, decrementCartItem, removeCartItem } from '../store/actions'
 
@@ -13,6 +12,7 @@ function MenuItem({ item }) {
   const cart = useSelector((state) => state.cart)
 
   function increment() {
+    console.log('payload', payload)
     if (quantity === 'Add') {
       dispatch(addToCart(payload))
       setQuantity(1)

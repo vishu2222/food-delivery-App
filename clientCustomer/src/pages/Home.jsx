@@ -19,9 +19,7 @@ export default function Home() {
   }, [])
 
   function showMenu(restaurant) {
-    // console.log('restaurant', restaurant)
     const restaurantId = restaurant.restaurant_id
-    // console.log('restaurantId:', restaurantId)
     dispatch(setFocusedRestaurant(restaurant))
     navigate(`/menu/${restaurantId}`)
   }
