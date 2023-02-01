@@ -44,3 +44,22 @@ setup:
 Redux toolkit:
 
 * Configuring redux is too complicated. Needs to add lots of packages and boiler plate code
+
+
+
+
+
+
+
+// plain redux
+
+1) React redux provides a pair of hookes useSelector and usedispatch
+*  useSelector: read from store state and update subscribers
+*  usedispatch: returns stores dispatch method to let dispatch actions
+
+https://earthctzn.medium.com/a-react-redux-state-demo-f6846d44b069
+*  Actions are a simple function that returns an object. The object has a type: attribute with the value of the action to be taken
+You send them to the store using store.dispatch().
+
+*  Reducers specify how the application’s state changes in response to actions sent to the store. Remember that actions only
+ describe what happened, but don’t describe how the application’s state changes.
