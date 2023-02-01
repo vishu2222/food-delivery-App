@@ -11,7 +11,7 @@ export async function getRestaruantsList(req, res) {
 
 export async function getMenu(req, res) {
   try {
-    const restaurantId = req.params.id
+    const restaurantId = req.params.restaurant_id
     const menu = await getRestaurantMenu(restaurantId)
     res.json({ data: menu })
   } catch (err) {
