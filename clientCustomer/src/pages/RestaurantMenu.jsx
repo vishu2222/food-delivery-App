@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { clearCart } from '../store/actions'
 import MenuItem from '../components/MenuItem'
 import Cart from '../components/Cart'
+import { io } from 'socket.io-client'
+
+const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
 
 function RestaurantMenu() {
   const [menu, setMenu] = useState([])
@@ -29,20 +32,39 @@ function RestaurantMenu() {
   async function createOrder() {
     setDisplayMsg('processing order...')
 
-    const finalCart = { restaurantId, customerId: 1, items: [] }
+    const customerId = 1
+    const addressId = 1
+    const finalCart = { restaurantId, addressId, items: [] }
     cartItems.forEach((item) => {
       finalCart.items.push({ itemId: item.item_id, quantity: item.quantity })
     })
 
-    const status = await placeOrder(finalCart)
+    const [status, orderId] = await placeOrder(finalCart, customerId)
     if (status !== 201) {
       setDisplayMsg('sorry, unable to place order')
     } else {
       dispatch(clearCart())
-
-      setDisplayMsg('order placed, your food is on the way')
+      setDisplayMsg(`order placed. Order id:${orderId} , awaiting restaurant confirmation`)
     }
   }
+
+  useEffect(() => {
+    socket.connect()
+    socket.on('restaurant-update', (status) => {
+      if (status.msg === 'accepted') {
+        setDisplayMsg(`order confirmed by restaurant, allocating delivary partner...`)
+      }
+      if (status.msg === 'declined') {
+        setDisplayMsg(`order declined by restaurant`)
+      }
+      if (status.msg === 'server-err') {
+        setDisplayMsg(`sorry, unable to get restaurant's confirmation due to internal error`)
+      }
+    })
+    return () => {
+      socket.off('restaurant-update')
+    }
+  }, [])
 
   return (
     <div id='menu-page'>
