@@ -6,18 +6,23 @@ export async function getRestaurants() {
   return response.data
 }
 
-export async function getMenu(id) {
-  const res = await fetch(`${baseUrl}/restaurants/${id}`)
+export async function getMenu(restaurantId) {
+  const res = await fetch(`${baseUrl}/restaurants/${restaurantId}/menu`)
   const response = await res.json()
   return response.data
 }
 
-export async function placeOrder(cart) {
+export async function placeOrder(cart, customerId) {
   console.log('cartItemsInplaceOrder', cart)
-  const res = await fetch(`${baseUrl}/orders`, {
+  const res = await fetch(`${baseUrl}/customers/${customerId}`, {
     headers: { 'content-type': 'application/json' },
     method: 'POST',
     body: JSON.stringify(cart)
   })
-  return res.status
+
+  const status = res.status
+  if (status !== 201) return [status, null]
+  const result = await res.json()
+  const orderId = result.data
+  return [status, orderId]
 }
