@@ -1,2 +1,24 @@
 deep copy and shallow copy
 https://dev.to/samanthaming/how-to-deep-clone-an-array-in-javascript-3cig
+
+jsonb postgress
+https://itnext.io/storing-json-in-postgres-using-node-js-c8ff50337013
+https://www.postgresql.org/docs/current/datatype-json.html
+
+geoLocation
+https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+
+https://www.npmjs.com/package/geolib
+
+https://www.google.com/search?q=navigator+javascript&sxsrf=AJOqlzXHsXx_OKPsZboafHokutxp7l9yZg%3A1674050713684&ei=mfzHY6OLKeXn4-EP5ci6sAU&oq=navigator+jav&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAxgBMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBggAEBYQHjIJCAAQFhAeEPEEMgkIABAWEB4Q8QQyBggAEBYQHjIGCAAQFhAeOgcIIxDqAhAnOgUIABCRAjoHCAAQsQMQQzoLCC4QgAQQxwEQrwE6CwgAEIAEELEDEIMBOggIABCxAxCDAToICAAQgAQQsQM6BAgjECdKBAhBGABKBAhGGABQzQdY0CVg_zNoAXABeACAAeoBiAG5BpIBBTEuMy4xmAEAoAEBoAECsAEKwAEB&sclient=gws-wiz-serp
+
+https://learnsql.com/blog/getting-started-with-postgis-your-first-steps-with-the-geography-data-type/
+
+https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
+
+- Redux essentials
+  https://redux.js.org/tutorials/essentials/part-2-app-structure
+
+* sockets:
+  https://stackoverflow.com/questions/59551831/how-can-i-export-socket-io-connection-to-another-controller
+  https://stackoverflow.com/questions/38511976/how-can-i-export-socket-io-into-other-modules-in-nodejs
