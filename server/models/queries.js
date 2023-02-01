@@ -16,9 +16,7 @@ export async function getRestaruants() {
 }
 
 export async function getRestaurantMenu(restaurant_id) {
-  const res = await pool.query('SELECT * FROM food_item  WHERE restaurant_id = $1;', [
-    restaurant_id
-  ])
+  const res = await pool.query('SELECT * FROM food_item  WHERE restaurant_id = $1;', [restaurant_id])
   return res.rows
 }
 
@@ -32,13 +30,52 @@ export async function getItemPrices(itemIds, restaurantId) {
   return res.rows
 }
 
-export async function placeOrder(restaurantId, totalAmount, orderItems, orderTime, customerId) {
-  const query = `INSERT INTO orders(order_time, total_price, customer_id, restaurant_id, order_items) 
-                 values (to_timestamp($1/1000.0), $2, $3 , $4, $5);`
-  const params = [orderTime, totalAmount, customerId, restaurantId, orderItems]
-  await pool.query(query, params)
+export async function getOrderId(customerId, restaurantId) {
+  const query = `SELECT order_id
+                 FROM orders 
+                 WHERE customer_id = $1
+                 AND restaurant_id=$2 
+                 AND created_at = 
+                 (SELECT MAX(created_at) FROM orders WHERE  customer_id = $1 AND restaurant_id = $2)`
+  const params = [customerId, restaurantId]
+  const response = await pool.query(query, params)
+
+  if (response.rowCount < 1) throw new Error('could not find the order')
+  return response.rows[0].order_id
 }
 
+export async function placeOrder(restaurantId, addressId, totalAmount, orderItems, orderTime, customerId) {
+  const query = `INSERT INTO orders(order_time, total_price, customer_id, address_id, restaurant_id, order_items) 
+                 values (to_timestamp($1/1000.0), $2, $3 , $4, $5, $6);`
+  const params = [orderTime, totalAmount, customerId, addressId, restaurantId, orderItems]
+  const response = await pool.query(query, params)
+  if (response.rowCount < 1) throw new Error('db err: cannot insert order')
+}
+
+export async function confirmOrder(orderId) {
+  const query = `UPDATE orders 
+                 SET restaurant_confirmed = true
+                 WHERE order_id = $1`
+  const params = [orderId]
+  const res = await pool.query(query, params)
+  if (res.rowCount < 1) throw new Error('db err: cannot insert into orders')
+}
+
+export async function getCustomersAddress(orderId) {
+  const query = `SELECT c.phone, ca.lat, ca.long, ca.house_no, ca.locality, ca.city
+                 FROM orders o
+                 INNER JOIN customer_address ca
+                 ON o.address_id = ca.address_id
+                 INNER JOIN customer c
+                 ON c.customer_id = o.customer_id
+                 WHERE o.order_id = $1;`
+  const params = [orderId]
+  const res = await pool.query(query, params)
+  if (res.rowCount < 1) throw new Error('db err: unable to get customer address')
+  return res.rows[0]
+}
+
+//-------------------------------------------------------------------------
 // res_id or agent_id is undefined or null,
 // case
 
