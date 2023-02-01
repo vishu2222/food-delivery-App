@@ -1,0 +1,18 @@
+https://flaviocopes.com/rest-api-express-mongodb/
+
+
+
+Action                              Route-resource-Path                                   controller                      
+-------------------------------------------------------------------------------------------------------
+customerGetsRestaurantList(GET)       /restaurants                                          getRestaruantsList
+customerGetsRestaurantDetails(GET)    /restaurants/:restaurant-id                           (currently not used )  //
+customerGetsRestaurantsMenu(GET       /restaurants/:restaurant-id/menu                      getRestaurantsMenu
+RestaurantFetchAllOrders(GET)         /restaurants/:restaurant-id/orders                    (currently not used )   //
+
+
+customerPlacesNewOrder(POST)          /customers/:customer-id/                               createOrder
+customerFetchPreviousOrders(GET)      /customers/:customer-id/                               (currently not used )    //
+
+
+RestaurantConfirmsOrder(PUT)          /orders/:order-id/                                    confirmOrder 
+orderDelivered(PUT)                   /orders/:order-id/partner                             (currently not used ) 
