@@ -13,15 +13,19 @@ const reducer = (state = initialState, action) => {
 
     case 'cart/incrementItem':
       const incrementedCart = [...state.cart].map((item) => {
-        if (item.item_id !== action.payload.item_id) return item
-        else return { ...item, quantity: item.quantity + 1 }
+        if (item.item_id !== action.payload.item_id) {
+          return item
+        }
+        return { ...item, quantity: item.quantity + 1 }
       })
       return { ...state, cart: incrementedCart }
 
     case 'cart/decrementItem':
       const decrementedCart = [...state.cart].map((item) => {
-        if (item.item_id !== action.payload.item_id) return item
-        else return { ...item, quantity: item.quantity - 1 }
+        if (item.item_id !== action.payload.item_id) {
+          return item
+        }
+        return { ...item, quantity: item.quantity - 1 }
       })
       return { ...state, cart: decrementedCart }
 
