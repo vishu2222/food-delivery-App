@@ -1,11 +1,4 @@
 
-
-Ref: https://joets.medium.com/install-postgresql-12-postgis-on-ubuntu-20-4-in-5-mins-1b8948545185
--- postgress server setup 
-sudo apt install postgresql-12 postgresql-client-12
-sudo sudo apt install gnupg2
-sudo apt install postgis postgresql-12-postgis-3
-
 -- server
 npm init
 npm i pg cors express dotenv
@@ -14,5 +7,15 @@ npm install @faker-js/faker --save-dev
 
 -- client
 npm install react-router-dom
-npm install redux react-redux @reduxjs/toolkit
- npm i redux-persist
+npm install react-redux
+npm install redux
+
+
+
+
+
+Ref: https://joets.medium.com/install-postgresql-12-postgis-on-ubuntu-20-4-in-5-mins-1b8948545185
+-- postgress server setup 
+sudo apt install postgresql-12 postgresql-client-12
+sudo sudo apt install gnupg2
+sudo apt install postgis postgresql-12-postgis-3
