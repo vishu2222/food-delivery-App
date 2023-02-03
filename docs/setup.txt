@@ -3,13 +3,15 @@
 npm init
 npm i pg cors express dotenv
 npm install @faker-js/faker --save-dev
+npm install socket.io
+npm install geolib
 
 
 -- client
 npm install react-router-dom
 npm install react-redux
 npm install redux
-
+npm install socket.io-client
 
 
 
