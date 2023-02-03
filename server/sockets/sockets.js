@@ -1,21 +1,36 @@
 import { Server } from 'socket.io'
 
+export const partners = []
+
+export const getPartnersLoc = async () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(partners)
+    }, 3000)
+  })
+}
+
 let io
 export default {
   init: (httpServer) => {
     io = new Server(httpServer, { cors: { origin: ['*'] } })
-    // registering socket listeners
-    let resCount = 0
+    let count = 0
     io.on('connection', (socket) => {
-      resCount++
-      console.log('sockets, count', resCount)
+      count++
+      console.log('socket count', count)
 
+      socket.on('my-location', (msg) => {
+        partners.push(msg)
+      })
+
+      socket.on('my-live-location', (msg) => {
+        console.log(msg)
+      })
       socket.on('disconnect', () => {
-        resCount--
-        console.log('sockets count ', resCount)
+        count--
+        console.log('socket count', count)
       })
     })
-    // return io
   },
   get: () => {
     if (io) {
