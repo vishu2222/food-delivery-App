@@ -12,12 +12,11 @@ async function validateItemsAndGetCartTotal(clientCart, restaurantId) {
       return ['invalidItem', totalPrice]
     }
 
-    // use reduce
-    clientCart.forEach((clientItem) => {
+    totalPrice = clientCart.reduce((sum, clientItem) => {
       const itemPrice = dbCart.find((dbItem) => dbItem.item_id === clientItem.itemId).price
       const itemQuantity = clientItem.quantity
-      totalPrice += itemPrice * itemQuantity
-    })
+      return sum + itemPrice * itemQuantity
+    }, 0)
 
     return ['itemsValid', totalPrice]
   } catch (err) {
@@ -34,11 +33,7 @@ export async function createOrder(req, res) {
   const customerId = req.params.customer_id
   try {
     console.log(Object.keys(cart))
-    if (
-      !Object.keys(cart).includes('restaurantId') ||
-      !Object.keys(cart).includes('items') ||
-      !Object.keys(cart).includes('addressId')
-    ) {
+    if (!Object.keys(cart).includes('restaurantId') || !Object.keys(cart).includes('items') || !Object.keys(cart).includes('addressId')) {
       return res.status(400).json({ err: 'bad request', msg: 'insufficient order details' })
     }
 
@@ -47,16 +42,16 @@ export async function createOrder(req, res) {
     }
 
     if (Object.keys(cart).length > 3) {
-      return res.status(400).json({ err: 'bad request', msg: 'order contains prohibited data' })
+      return res.status(400).json({ err: 'bad request', msg: 'order contains unnecessary data' })
     }
 
     for (const item of orderItems) {
       if (Object.keys(item).length > 2) {
-        return res.status(400).json({ err: 'bad request', msg: 'order contains prohibited data' })
+        return res.status(400).json({ err: 'bad request', msg: 'order contains unnecessary data' })
       }
 
       if (item.quantity < 1) {
-        return res.status(400).json({ err: 'bad request', msg: 'item quantity less than 0' })
+        return res.status(400).json({ err: 'bad request', msg: 'item quantity min = 1' })
       }
     }
 
@@ -74,19 +69,10 @@ export async function createOrder(req, res) {
 
     const [itemsValid, total] = await validateItemsAndGetCartTotal(cart.items, restaurantId) // multiple things with one query
     if (itemsValid === 'invalidItem') {
-      return res
-        .status(404)
-        .json({ err: 'bad request', msg: 'cannot place order, some cart items are not found' })
+      return res.status(404).json({ err: 'bad request', msg: 'cannot place order, some cart items are not found' })
     }
 
-    await placeOrder(
-      restaurantId,
-      addressId,
-      total,
-      JSON.stringify(orderItems),
-      orderTime,
-      customerId
-    )
+    await placeOrder(restaurantId, addressId, total, JSON.stringify(orderItems), orderTime, customerId)
 
     const orderId = await getOrderId(customerId, restaurantId)
     notifyRestaurant(restaurantId, orderItems, orderId)
@@ -100,6 +86,5 @@ export async function createOrder(req, res) {
 function notifyRestaurant(restaurantId, orderItems, orderId) {
   const io = socket.get()
   const order = { orderId, orderItems }
-  //   console.log(order)
   io.emit('new-order', order) // io.to(socketid of restaurant)
 }
