@@ -3,6 +3,7 @@
 ### review from demos
 
 - [ ] add backend routes and establish the contracts before working on frontend
+
 - [*] modify db schema, remove order items and json object to the orders table.
 - [ ] build api for restaurents and delivary partners
 - [*] remove business logic from models
@@ -17,6 +18,7 @@
 - [*] create a db schema
 - [*] remove dotenv from queries and load it initially
 - [ ] use faker js to fetch images
+- [ ] add order state management.
 
 Todo
 
@@ -35,3 +37,6 @@ questions:
 References:
 https://www.postgresql.org/docs/current/datatype-json.html
 https://itnext.io/storing-json-in-postgres-using-node-js-c8ff50337013
+https://www.npmjs.com/package/geolib?activeTab=readme
+https://stackoverflow.com/questions/38511976/how-can-i-export-socket-io-into-other-modules-in-nodejs
+https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
