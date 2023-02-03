@@ -52,13 +52,23 @@ export async function placeOrder(restaurantId, addressId, totalAmount, orderItem
   if (response.rowCount < 1) throw new Error('db err: cannot insert order')
 }
 
-export async function confirmOrder(orderId) {
+export async function addRestaurantConfirmation(orderId) {
   const query = `UPDATE orders 
                  SET restaurant_confirmed = true
                  WHERE order_id = $1`
   const params = [orderId]
   const res = await pool.query(query, params)
   if (res.rowCount < 1) throw new Error('db err: cannot insert into orders')
+}
+
+export async function getRestaruantsAddress(orderId) {
+  const query = `SELECT restaurant_name, phone, lat,long,address,city FROM orders o INNER JOIN restaurant r
+                 ON o.restaurant_id = r.restaurant_id 
+                 WHERE order_id=$1;`
+  const params = [orderId]
+  const res = await pool.query(query, params)
+  if (res.rowCount < 1) throw new Error('db err: cannot find resstaurant address')
+  return res.rows[0]
 }
 
 export async function getCustomersAddress(orderId) {
@@ -73,6 +83,21 @@ export async function getCustomersAddress(orderId) {
   const res = await pool.query(query, params)
   if (res.rowCount < 1) throw new Error('db err: unable to get customer address')
   return res.rows[0]
+}
+
+export async function getDelivaryPartnerDetails(partnerId) {
+  const query = `select partner_name, phone from delivary_partner where partner_id = $1;`
+  const params = [partnerId]
+  const res = await pool.query(query, params)
+  if (res.rowCount < 1) throw new Error('db err: unable to get dp details')
+  return res.rows[0]
+}
+
+export async function addDelivaryPartner(orderId, partnerId) {
+  const query = `UPDATE orders SET partner_id = ($1) where order_id=$2;`
+  const params = [partnerId, orderId]
+  const res = await pool.query(query, params)
+  if (res.rowCount < 1) throw new Error('db err: unable to update delivary partner')
 }
 
 //-------------------------------------------------------------------------
