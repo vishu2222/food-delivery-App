@@ -2,6 +2,127 @@ https://flaviocopes.com/rest-api-express-mongodb/
 
 
 
+
+
+
+
+
+REST CONSTRAINTS: https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
+
+SEPERATION OF CONCERNS:
+* seperating user interface concerns from data storage concerns lets these components evolve independently,
+  improves UI portability, allows scalability by simplifying server components.
+  
+STATE LESS:
+* A request should contain all necessary information to understand and process it. Server need not 
+  look anywhere else to understand the request. The req-res session state is kept at 
+  client side. 
+* As server doesnt need to store state between requests, it can free up resources used by a request. server need not
+  manage resource  usage accross requests.
+* since no data is left on the server this may affect network performance due to repetition of data being interchanged.
+* a solution is to cach the data on the client-side. The tradeOff is that cached date may not be the updated data.
+
+UNIFORM INTERFACE:
+* Enforcing uniform interface between components improves visibility, simplifies over all system architecture
+* Decoupling implementations from the services they provide encourages independent evolvability.
+* A draw-back is that this reduces effiency because we are prefering standards over the needs. For example an application
+  may need data transfed according to its needs rather than standards.
+
+INTERFACE CONSTRAINTS:
+
+Layered system:
+* This allows architecture to be composed of layers of components. Each component layer cannot see beyond the immideate layer 
+  its interacting with. By restricting knowledge of a system to a single layer we we place a bound on the overall system 
+  complexity and promote substrate independence.
+
+
+
+is server side session management consistent with rest?
+
+
+
+
+
+
+
+
+
+customer opens app ask for location permission grant
+search bar for restaurant or item
+show top rated restaurants near by
+show items on click get near restaurants for that item
+v2
+-------------------------------------------------------------------------------------------------------------------------------------
+
+1) LOGIN AND REGISTRATION REQUESTS            RESOURCE-PATH                           CONTROLLER
+
+userRegisters                                 POST  /users                            registerUser
+userLogsin                                    POST  /users/me                         loginUser
+
+
+2) CUSTOMER REQUESTS:                         RESOURCE-PATH                            CONTROLLER
+
+getRestaurantsList                            GET    /restaurants                      getRestaurantsList
+getMyPreviousOrders                           GET    /orders                           getPastOrders
+getOrderDetails                               GET    /orders/:order_id                 getOrdeDetails
+getRestaurantsMenu                            GET    /restaurants:restaurant_id        getRestaurantMenu
+PlaceAnOrder                                  POST   /orders                           createOrder
+
+
+
+3) RESTAURANT REQUESTS:                       RESOURCE-PATH                            CONTROLLER
+
+confirmOrDeclineAnOrder                       PUT     /orders/:order_id                confirmOrder
+getAllOrders                                  GET     /orders                          getAllOrders
+addNewMenuItem                                POST    /menu                            addMenuItem
+updateMenuItem                                PUT     /menu/:item_id                   updateMenuItem
+deleteMenuItem                                DELETE  /menu/:item_id                   deleteMenuItem
+
+
+4) DELIVARY PARTNER REQUESTS:                 RESOURCE-PATH                            CONTROLLER
+
+updateAvailability                            PUT
+orderDelivered                                PUT
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+review restaurant                             POST   /review
+rate restaurant                               POST   /rate
+add address,phone etc                         POST   /customer
+update address, phone etc                     PUT   /customer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+v1
+
 Action                              Route-resource-Path                                   controller                      
 -------------------------------------------------------------------------------------------------------
 customerGetsRestaurantList(GET)       /restaurants                                          getRestaruantsList
@@ -15,4 +136,31 @@ customerFetchPreviousOrders(GET)      /customers/:customer-id/                  
 
 
 RestaurantConfirmsOrder(PUT)          /orders/:order-id/                                    confirmOrder 
-orderDelivered(PUT)                   /orders/:order-id/partner                             (currently not used ) 
+orderDelivered(PUT)                   /orders/:order-id/                             (currently not used ) 
+
+getAllorders(get)                    GET /orders?restaurant-id=        
+getOrderById (get)                   GET /orders/:order-id
+createOrder(post)                    POST /orders/
+updateOrder                          PUT /orders/:order-id
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+GET /restaurants
+
+Retrieve a list of all restaurants, filtered by minimum rating (optional) and sorted by price (optional).
+
+Parameters:
+  - min-rating: Minimum rating of the restaurants to be retrieved (optional).
+  - sort: Sorting criteria for the results, either "price" or not specified (optional).
+
+Example Requests:
+  - GET /restaurants?min-rating=4
+  - GET /restaurants?min-rating=4&sort=price
+  - GET /restaurants?sort=price
+  - GET /restaurants?min-rating=4&sort=distance
+
+
