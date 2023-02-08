@@ -68,8 +68,9 @@ create table orders(
 	delivary_time		  timestamp,
 	total_price			  real not null,
 	restaurant_confirmed  boolean default false,
-	partner_confirmed	  boolean default false,   
-	delivary_status       varchar not null default 'pending' check (delivary_status in ('pending', 'delivered')),
+	partner_assigned	  boolean default false,
+	order_pickedup	      boolean default false,
+	delivary_status       varchar default 'not initiated' check (delivary_status in ('transit', 'delivered', 'not initiated')),
 	customer_id			  integer not null,
 	address_id			  integer not null,
 	restaurant_id		  integer not null,
@@ -77,7 +78,7 @@ create table orders(
 	order_items 		  JSONB not null,
 	created_at			  timestamp default NOW(),
 	updated_at 			  timestamp default NOW(),
--- 	payment_done		  boolean not null, 
+-- 	payment_done		  boolean not null,
 	constraint fk_order_restaurant foreign key(restaurant_id) references restaurant(restaurant_id),
 	constraint fk_order_partner foreign key(partner_id) references delivary_partner(partner_id),
 	constraint fk_order_customer foreign key(customer_id) references customer(customer_id),
@@ -119,6 +120,13 @@ select * from delivary_partner;
 select * from restaurant;
 select * from food_item;
 select * from orders;
+
+update orders set partner_assigned = true where order_id=1;
+
+
+select order_items from orders where order_id=1;
+
+select * from restaurant where restaurant_id=1;
 
 --
 -- select restaurant_name, phone, lat,long,address,city from orders o inner join restaurant r

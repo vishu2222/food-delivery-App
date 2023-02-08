@@ -1,6 +1,6 @@
-import express from 'express'
-import { restaurantsOrderUpdate } from '../controllers/ordersController.js'
+// import express from 'express'
+// import { restaurantsOrderUpdate } from '../controllers/ordersController.js'
 
-export const router = express.Router()
+// export const router = express.Router()
 
-router.put('/:order_id', restaurantsOrderUpdate)
+// router.put('/:order_id', restaurantsOrderUpdate)

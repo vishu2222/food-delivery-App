@@ -1,15 +1,5 @@
 import { Server } from 'socket.io'
 
-export const partners = []
-
-export const getPartnersLoc = async () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(partners)
-    }, 3000)
-  })
-}
-
 let io
 export default {
   init: (httpServer) => {
@@ -19,13 +9,13 @@ export default {
       count++
       console.log('socket count', count)
 
-      socket.on('my-location', (msg) => {
-        partners.push(msg)
-      })
+      // socket.on('my-location', (msg) => {
+      //   partners.push(msg)
+      // })
 
-      socket.on('my-live-location', (msg) => {
-        console.log(msg)
-      })
+      // socket.on('my-live-location', (msg) => {
+      //   console.log(msg)
+      // })
       socket.on('disconnect', () => {
         count--
         console.log('socket count', count)
@@ -39,3 +29,13 @@ export default {
     throw new Error('socket not initialized')
   }
 }
+
+// export const partners = []
+
+// export const getPartnersLoc = async () => {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve(partners)
+//     }, 3000)
+//   })
+// }
