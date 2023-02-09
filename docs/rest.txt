@@ -52,38 +52,6 @@ search bar for restaurant or item
 show top rated restaurants near by
 show items on click get near restaurants for that item
 v2
--------------------------------------------------------------------------------------------------------------------------------------
-
-1) LOGIN AND REGISTRATION REQUESTS            RESOURCE-PATH                           CONTROLLER
-
-userRegisters                                 POST  /users                            registerUser
-userLogsin                                    POST  /users/me                         loginUser
-
-
-2) CUSTOMER REQUESTS:                         RESOURCE-PATH                            CONTROLLER
-
-getRestaurantsList                            GET    /restaurants                      getRestaurantsList
-getMyPreviousOrders                           GET    /orders                           getPastOrders
-getOrderDetails                               GET    /orders/:order_id                 getOrdeDetails
-getRestaurantsMenu                            GET    /restaurants:restaurant_id        getRestaurantMenu
-PlaceAnOrder                                  POST   /orders                           createOrder
-
-
-
-3) RESTAURANT REQUESTS:                       RESOURCE-PATH                            CONTROLLER
-
-confirmOrDeclineAnOrder                       PUT     /orders/:order_id                confirmOrder
-getAllOrders                                  GET     /orders                          getAllOrders
-addNewMenuItem                                POST    /menu                            addMenuItem
-updateMenuItem                                PUT     /menu/:item_id                   updateMenuItem
-deleteMenuItem                                DELETE  /menu/:item_id                   deleteMenuItem
-
-
-4) DELIVARY PARTNER REQUESTS:                 RESOURCE-PATH                            CONTROLLER
-
-updateAvailability                            PUT
-orderDelivered                                PUT
-----------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -101,27 +69,12 @@ orderDelivered                                PUT
 
 
 
-review restaurant                             POST   /review
-rate restaurant                               POST   /rate
-add address,phone etc                         POST   /customer
-update address, phone etc                     PUT   /customer
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-v1
+old
 
 Action                              Route-resource-Path                                   controller                      
 -------------------------------------------------------------------------------------------------------
