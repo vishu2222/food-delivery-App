@@ -61,16 +61,12 @@ create table food_item(
 );
 
 
-
 create table orders(
 	order_id			  serial primary key,
 	order_time			  timestamp not null,
 	delivary_time		  timestamp,
 	total_price			  real not null,
-	restaurant_confirmed  boolean default false,
-	partner_assigned	  boolean default false,
-	order_pickedup	      boolean default false,
-	delivary_status       varchar default 'not initiated' check (delivary_status in ('transit', 'delivered', 'not initiated')),
+	order_status          varchar default 'awaiting restaurant confirmation' check (order_status in ('awaiting restaurant confirmation', 'searching for delivery partner', 'awaiting pickup', 'awaiting delivary', 'delivered', 'cancelled')),
 	customer_id			  integer not null,
 	address_id			  integer not null,
 	restaurant_id		  integer not null,
@@ -78,12 +74,15 @@ create table orders(
 	order_items 		  JSONB not null,
 	created_at			  timestamp default NOW(),
 	updated_at 			  timestamp default NOW(),
--- 	payment_done		  boolean not null,
 	constraint fk_order_restaurant foreign key(restaurant_id) references restaurant(restaurant_id),
 	constraint fk_order_partner foreign key(partner_id) references delivary_partner(partner_id),
 	constraint fk_order_customer foreign key(customer_id) references customer(customer_id),
 	constraint fk_order_address foreign key(address_id) references customer_address(address_id)
 );
+
+
+
+select * from delivary_partner;
 
 
 -- insert a customer
@@ -121,12 +120,26 @@ select * from restaurant;
 select * from food_item;
 select * from orders;
 
-update orders set partner_assigned = true where order_id=1;
 
 
-select order_items from orders where order_id=1;
+SELECT order_id, order_items, order_time, delivary_time, total_price, 
+                   restaurant_name, order_status, partner_name, delivary_partner.phone
+                 FROM orders
+                 INNER JOIN restaurant
+                 ON orders.restaurant_id = restaurant.restaurant_id
+                 INNER JOIN delivary_partner
+                 ON orders.partner_id = delivary_partner.partner_id
+                 WHERE order_id = 1 AND customer_id=1;
 
-select * from restaurant where restaurant_id=1;
+
+
+
+
+-- SELECT * FROM food_item
+-- inner join restaurant 
+-- on food_item.restaurant_id = restaurant.restaurant_id
+-- WHERE restaurant.restaurant_id = 10;
+
 
 --
 -- select restaurant_name, phone, lat,long,address,city from orders o inner join restaurant r
@@ -160,7 +173,14 @@ select * from restaurant where restaurant_id=1;
 
 
 
-
+--  SELECT order_id, order_items, order_time, delivary_time, total_price, 
+--         customer_address.house_no, customer_address.city, restaurant_name
+--  FROM orders 
+--  INNER JOIN restaurant
+--  ON orders.restaurant_id = restaurant.restaurant_id
+--  INNER JOIN customer_address
+--  ON orders.address_id = customer_address.address_id
+-- WHERE order_id=1 AND orders.customer_id=1;
 
 
 
