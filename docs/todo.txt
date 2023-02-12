@@ -15,9 +15,13 @@
 14) 
 15) use plain react redux
 16) remove business logic from models
+18) bull for queying
+19) remove timestamp for close time and open time
+20) response structure 
+21) can remove res_id from from items in get restaurant
+22) learn about searving static files 
 
 
- 
 
 
 Learn:
@@ -38,24 +42,29 @@ Learn:
 15) debouncing and throttling
 16) what does useDispatch() do ?
 17) common-js vs module exports default and named exports
-18)  element.innerHtml vs element.textContent vs element.text
+18) element.innerHtml vs element.textContent vs element.text
+19) different types storate(session, local, cookies) 
 
 
 
 
 
-Experiments to do:
+questions::
 1) what happens if same named export in two different modules are imported inot an application file?
-2) * onclick = {handleClick} vs {handleclick()}
-
-
-questions:
-
-2) what is better and why? should i get restaurants and menus or menu on restaurant click
-
-3) is it ok to store phone numbers in varchar?
+2) what happens if i make a request which takes 1 hour of calculation for server to respond. will the tcp close?
+3) what is better and why? should i get restaurants and menus or menu on restaurant click
+4) what is item quantity is used to store a very very bigNumber?
 
 
 checks:
 
 if item_id is a string
+
+
+
+interesting articles i came accross:
+https://www.freecodecamp.org/news/how-to-compare-arrays-in-javascript/
+https://stackoverflow.com/questions/69409041/how-to-query-json-in-a-postgres-table-from-an-express-rest-api
+
+
+
