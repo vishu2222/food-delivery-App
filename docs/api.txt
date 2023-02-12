@@ -2,9 +2,10 @@
 -------------------------------------------------------------------------------------------------------------------------------------
 
 1) LOGIN AND REGISTRATION REQUESTS            RESOURCE-PATH                           CONTROLLER
-
+ 
 userRegisters                                 POST  /users                            registerUser
-userLogsin                                    POST  /users/login                      loginUser
+initialAuthentication                         POST  /sessions                          authenticate
+userLogsin                                    POST  /sessions/new                      loginUser
 
 
 2) CUSTOMER REQUESTS:                      
@@ -20,9 +21,6 @@ PlaceAnOrder                                  POST   /orders                    
 
 confirmOrDeclineAnOrder      *                PUT     /orders/:order_id                confirmOrder          done
 getAllOrders                 *                GET     /orders                          getAllOrders          done
-addNewMenuItem                                POST    /menu                            addMenuItem
-updateMenuItem                                PUT     /menu/:item_id                   updateMenuItem
-deleteMenuItem                                DELETE  /menu/:item_id                   deleteMenuItem
 
 
 4) DELIVARY PARTNER REQUESTS:                
@@ -31,12 +29,16 @@ orderDelivered               *                PUT      /orders/:order_id        
 updateAvailability                            PUT
 
 
-5) Common routes for different roles                                                   RESTAURANT      CUSTOMER       DELIVERY-PARTNER
+----------------------------------------------------------------------------------------------------------------------------------
+Common routes for different roles                                                   RESTAURANT      CUSTOMER       DELIVERY-PARTNER
 
 ShowAllOrders                                 GET    /orders                           getAllOrders    getAllOrders   NONE
 getOrderDetails                               GET    /orders/:order_id                 getOrdeDetails  NONE           NONE
 updateOrder                                   PUT    /orders/:order_id                 confirmOrder    NONE           updateDelivary     
 
-----------------------------------------------------------------------------------------------------------------------------------
 
+not implementd for now
 
+addNewMenuItem                                POST    /menu                            addMenuItem
+updateMenuItem                                PUT     /menu/:item_id                   updateMenuItem
+deleteMenuItem                                DELETE  /menu/:item_id                   deleteMenuItem
