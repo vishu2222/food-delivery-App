@@ -33,9 +33,10 @@ export async function getItemPrices(itemIds, restaurantId) {
 }
 
 export async function placeOrder(restaurantId, addressId, totalAmount, orderItems, orderTime, customerId) {
-  const query = `INSERT INTO orders(order_time, total_price, customer_id, address_id, restaurant_id, order_items) 
-                 values (to_timestamp($1/1000.0), $2, $3 , $4, $5, $6);`
-  const params = [orderTime, totalAmount, customerId, addressId, restaurantId, orderItems]
+  const orderStatus = 'awaiting restaurant confirmation'
+  const query = `INSERT INTO orders(order_time, total_price, customer_id, address_id, restaurant_id, order_items, order_status) 
+                 values (to_timestamp($1/1000.0), $2, $3 , $4, $5, $6, $7);`
+  const params = [orderTime, totalAmount, customerId, addressId, restaurantId, orderItems, orderStatus]
   const response = await pool.query(query, params)
   if (response.rowCount < 1) throw new Error('db err: cannot insert order')
 }
@@ -54,36 +55,26 @@ export async function getAllRestaurantOrders(restaurantId) {
   return res.rows
 }
 
-export async function getOrderStatus(orderId, customerId) {
-  const query = `SELECT order_status FROM orders WHERE order_id = $1 AND customer_id = $2;`
-  const params = [orderId, customerId]
-  const res = await pool.query(query, params)
-  return res.rows
-}
+// export async function getOrderStatus(orderId, customerId) {
+//   const query = `SELECT order_status FROM orders WHERE order_id = $1 AND customer_id = $2;`
+//   const params = [orderId, customerId]
+//   const res = await pool.query(query, params)
+//   return res.rows
+// }
 
 export async function fetchOrderDetails(orderId) {
-  const query = `SELECT order_id, order_items, order_time, delivary_time, 
-                 total_price, restaurant_name, order_status
-                 FROM orders 
-                 INNER JOIN restaurant
-                 ON orders.restaurant_id = restaurant.restaurant_id
-                 WHERE order_id=$1;`
-  const res = await pool.query(query, [orderId])
-  return res.rows
-}
-
-export async function fetchDeliveryDetails(orderId) {
   const query = `SELECT order_id, order_items, order_time, delivary_time, total_price, 
-                   restaurant_name, order_status, partner_name, delivary_partner.phone
+                 restaurant_name, order_status, partner_name, delivary_partner.phone
                  FROM orders
                  INNER JOIN restaurant
                  ON orders.restaurant_id = restaurant.restaurant_id
-                 INNER JOIN delivary_partner
+                 LEFT JOIN delivary_partner
                  ON orders.partner_id = delivary_partner.partner_id
                  WHERE order_id = $1 ;`
   const res = await pool.query(query, [orderId])
   return res.rows
 }
+//
 
 export async function updateRestaurantConfirmation(orderId, statusUpdate) {
   const query = `UPDATE orders
@@ -93,15 +84,6 @@ export async function updateRestaurantConfirmation(orderId, statusUpdate) {
   const res = await pool.query(query, params)
   return res.rowCount
 }
-
-// export async function updateDelivaryConfirmation(orderId, statusUpdate) {
-//   const query = `UPDATE orders
-//                  SET order_status = $2
-//                  WHERE order_id = $1`
-//   const params = [orderId, statusUpdate]
-//   const res = await pool.query(query, params)
-//   if (res.rowCount < 1) throw new Error('db err: cannot update the order')
-// }
 
 export async function getItemNames(itemIds) {
   const query = `SELECT item_id, item_name FROM food_item WHERE item_id = ANY($1)`
@@ -144,3 +126,12 @@ export async function updateDelivary(orderId) {
   const res = await pool.query(query, params)
   return res.rowCount
 }
+
+// export async function updateDelivaryConfirmation(orderId, statusUpdate) {
+//   const query = `UPDATE orders
+//                  SET order_status = $2
+//                  WHERE order_id = $1`
+//   const params = [orderId, statusUpdate]
+//   const res = await pool.query(query, params)
+//   if (res.rowCount < 1) throw new Error('db err: cannot update the order')
+// }
