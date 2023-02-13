@@ -7,10 +7,7 @@ drop table restaurant cascade;
 drop table food_item;
 drop type order_status_type cascade;
 drop table orders;
-
--- select * from users;
--- select * from customer;
--- select * from restaurant;
+drop table sessions;
 
 
 -- 
@@ -32,6 +29,12 @@ CREATE TABLE users(
 -- INSERT INTO users(user_name, user_type, password) VALUES ('restaurant1', 'restaurant', 'password');
 -- INSERT INTO users(user_name, user_type, password) VALUES ('restaurant2', 'restaurant', 'password');
 
+CREATE TABLE sessions(
+	session_id		varchar primary key,
+	user_id  		integer,
+	created_at 		timestamp default NOW(),
+	constraint fk_sessions_users foreign key(user_id) references users(user_id)
+);
 
 
 --
@@ -153,6 +156,20 @@ create table orders(
 	constraint fk_order_customer foreign key(customer_id) references customer(customer_id),
 	constraint fk_order_address foreign key(address_id) references customer_address(address_id)
 );
+
+
+select * from users;
+select * from customer;
+select * from restaurant;
+select * from sessions;
+
+
+-- select 
+
+
+
+-- select * from  sessions  inner join users on users.user_id=sessions.user_id where user_name='customer1'
+
 
 -- customer insert into orders
 -- insert into orders(order_time, total_price, customer_id, restaurant_id, order_items) values (now(), 100, 1,1,'[{"item_id": 1, "quantity": 2}, {"item_id": 2, "quantity": 1}]');
