@@ -7,6 +7,7 @@ npm install geolib
 npm install bcrypt
 npm install @faker-js/faker --save-dev
 npm install uuid
+npm i cookie-parser
 
 
 -- client
