@@ -1,6 +1,8 @@
 import express from 'express'
-import { userLogin } from '../controllers/session.js'
+import { userLogin, authorizeUser } from '../controllers/session.js'
+import { auth } from '../middleware/auth.js'
 
 export const router = express.Router()
 
-router.post('/new', userLogin)
+router.post('/', userLogin)
+router.get('/', auth, authorizeUser)
