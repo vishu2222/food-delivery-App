@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import config from './config.js'
+import cookieParser from 'cookie-parser'
 import { createServer } from 'http'
 import socketSetup from './sockets/sockets.js'
 import { router as restaurantRouter } from './routes/restaurants.js'
@@ -10,8 +11,10 @@ import { router as sessionRouter } from './routes/session.js'
 
 const port = config.port
 const app = express()
-app.use(cors())
+
+app.use(cors({ origin: 'http://localhost:3001', credentials: true }))
 app.use(express.json())
+app.use(cookieParser())
 
 const httpServer = createServer(app)
 socketSetup.init(httpServer)
