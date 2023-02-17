@@ -9,7 +9,7 @@ function Cart() {
 
   return (
     <div id='cart'>
-      <p>Cart</p>
+      <h4>Cart</h4>
       {cart.map((item, index) => {
         return <CartItem key={index} item={item} />
       })}
