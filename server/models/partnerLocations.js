@@ -1,21 +1,26 @@
-import socket from '../sockets/sockets.js'
+import { Server } from 'socket.io'
 
-export default {}
+let io
+let count = 0
+export default {
+  init: (httpServer) => {
+    io = new Server(httpServer, { cors: { origin: ['*'] } })
 
-// export const partners = []
+    io.on('connection', (socket) => {
+      count++
+      console.log('socket count', count)
+      console.log('socketId', socket.id)
 
-// export const getPartnersLoc = async () => {
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       resolve(partners)
-//     }, 3000)
-//   })
-// }
+      socket.on('disconnect', () => {
+        count--
+      })
+    })
+  },
 
-// socket.on('my-location', (msg) => {
-//   partners.push(msg)
-// })
-
-// socket.on('my-live-location', (msg) => {
-//   console.log(msg)
-// })
+  get: () => {
+    if (io) {
+      return io
+    }
+    throw new Error('socket not initialized')
+  }
+}
