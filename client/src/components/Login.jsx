@@ -9,14 +9,12 @@ function Login() {
 
   const [userName, setuserName] = useState('')
   const [password, setPassword] = useState('')
-  const [userType, setUserType] = useState('customer')
-  const [displayErr, setDisplayErr] = useState(false)
   const [errMsg, setErrMsg] = useState('')
 
   async function signIn() {
-    const status = await requests.login(userName, password, userType)
+    const [status, userType] = await requests.login(userName, password)
+
     if (status !== 201) {
-      setDisplayErr(true)
       setErrMsg('invalid login')
       return
     }
@@ -29,7 +27,7 @@ function Login() {
         navigate('/restaurant-Home')
         break
       case 'delivery_partner':
-        navigate('/delivery_partner')
+        navigate('/delivery_partner-Home')
         break
 
       default:
@@ -45,18 +43,12 @@ function Login() {
         <input type='text' onChange={(e) => setuserName(e.target.value)} />
         <label> Password </label>
         <input type='password' onChange={(e) => setPassword(e.target.value)} />
-        <label>userType</label>
-        <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-          <option>customer</option>
-          <option>restaurant</option>
-          <option>delivery_partner</option>
-        </select>
         <button onClick={signIn}> Sign In </button>
         <h3>
           New User? <Link to='/register'>signup</Link>
         </h3>
       </form>
-      <p>{displayErr && errMsg}</p>
+      <p>{errMsg}</p>
     </div>
   )
 }
