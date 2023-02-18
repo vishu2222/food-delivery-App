@@ -24,6 +24,7 @@ export async function registerCustomer(userName, userType, password, customerNam
     const response = await client.query(`SELECT user_id 
                                          FROM users  
                                          WHERE created_at = (SELECT MAX(created_at) FROM users);`)
+    // can use user_name instead of subquery
 
     const params = [customerName, phone, email, response.rows[0].user_id]
     await client.query(`INSERT INTO customer(customer_name, phone, email, user_id) VALUES ($1, $2, $3, $4);`, params)
@@ -43,4 +44,4 @@ export async function registerCustomer(userName, userType, password, customerNam
 
 export async function registerRestaurant() {}
 
-export async function registerDelivaryPartner() {}
+export async function registerDeliveryPartner() {}
