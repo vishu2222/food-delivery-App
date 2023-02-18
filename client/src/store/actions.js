@@ -1,3 +1,17 @@
+export const setRestaurantId = (restaurantId) => {
+  return {
+    type: 'add/restaurant',
+    payload: restaurantId
+  }
+}
+
+export const addUserType = (userType) => {
+  return {
+    type: 'user',
+    payload: userType
+  }
+}
+
 export const addToCart = (newItem) => {
   return {
     type: 'cart/addItem',
@@ -29,5 +43,19 @@ export const removeCartItem = (item) => {
 export const clearCart = () => {
   return {
     type: 'cart/clearCart'
+  }
+}
+
+export const setDelivaryAddress = (addressId) => {
+  return {
+    type: 'delivary/address',
+    payload: addressId
+  }
+}
+
+export const removeDelivaryAddress = (addressId) => {
+  return {
+    type: 'clear/address',
+    payload: addressId
   }
 }
