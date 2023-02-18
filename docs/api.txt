@@ -1,6 +1,6 @@
 
 -------------------------------------------------------------------------------------------------------------------------------------
-
+ 
 1) LOGIN AND REGISTRATION REQUESTS            RESOURCE-PATH                           CONTROLLER
  
 userRegisters                                 POST  /users                             registerUser
@@ -15,7 +15,8 @@ ShowAllOrders                *                GET    /orders                    
 getOrderDetails              *                GET    /orders/:order_id                 getOrdeDetails        done
 getRestaurantsMenu                            GET    /restaurants:restaurant_id        getRestaurantMenu     done
 PlaceAnOrder                                  POST   /orders                           createOrder           done
-
+getAddress                                    GET    /address 
+addNewAddress                                 POST   /address         
 
 3) RESTAURANTS REQUESTS:                     
 
