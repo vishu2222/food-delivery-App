@@ -4,7 +4,7 @@ function CartItem({ item }) {
   return (
     <div>
       <strong>{item.item_name} quantity: </strong>
-      {item.quantity} ₹{item.quantity * item.price}
+      {item.quantity} price: ₹{item.quantity * item.price}
     </div>
   )
 }
