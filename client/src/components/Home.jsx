@@ -1,20 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import requests from '../requests'
 import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
 
 function Home() {
   const navigate = useNavigate()
 
   useEffect(() => {
     async function authorizeMe() {
-      const [status, userRole] = await requests.authorizeMe()
+      const [status, userType] = await requests.authorizeMe()
       if (status !== 200) {
         navigate('/login')
         return
       }
 
-      switch (userRole) {
+      switch (userType) {
         case 'customer':
           navigate('/customer-Home')
           break
@@ -33,7 +32,7 @@ function Home() {
     authorizeMe()
   }, [navigate])
 
-  return <div>Home</div>
+  return <></>
 }
 
 export default Home
