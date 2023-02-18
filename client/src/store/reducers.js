@@ -1,10 +1,20 @@
 const initialState = {
   cart: [],
-  restaurantId: null
+  restaurantId: null,
+  delivaryAddressId: null
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'add/restaurant':
+      return { ...state, restaurantId: action.payload }
+
+    case 'delivary/address':
+      return { ...state, delivaryAddressId: action.payload }
+
+    case 'clear/address':
+      return { ...state, delivaryAddressId: null }
+
     case 'cart/addItem':
       return { ...state, cart: [...state.cart, { ...action.payload, quantity: 1 }] }
 
