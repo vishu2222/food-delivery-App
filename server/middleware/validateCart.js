@@ -1,6 +1,7 @@
 // cart validations
 export function validateCart(req, res, next) {
   const cart = req.body
+
   const [err, msg] = validateOrder(cart)
   if (err) {
     return res.status(400).json({ err, msg })
@@ -55,16 +56,16 @@ function validateCartContent(cart) {
   if (JSON.stringify(Object.keys(cart)) !== '["restaurantId","addressId","items"]') {
     const err = 'bad request'
     const msg = `order details inadequate
-           or order details not in expected order 
-           or spelling mistakes in cart fields
-           or unwanted data included in cart`
+                 or order details not in expected order 
+                 or spelling mistakes in cart fields
+                 or unwanted data included in cart`
     return [err, msg]
   }
   return [null, null]
 }
 
 function isCartEmpty(clientCartItems) {
-  if (clientCartItems.length === 0) {
+  if (Object.keys(clientCartItems).length === 0) {
     const err = 'bad request'
     const msg = 'cart is empty'
     return [err, msg]
@@ -84,6 +85,8 @@ function validateCartItems(clientCartItems) {
   return [null, null]
 }
 
+// need to validate  restaurantId
+
 // different items cant have same item_id
 // for (let i in orderItems) {
 //   for (let j in orderItems) {
@@ -95,46 +98,3 @@ function validateCartItems(clientCartItems) {
 //     }
 //   }
 // }
-
-// import { getRestaruant, getAddress } from '../models/customerModel.js'
-//   ;[status, err, msg] = await validateRestaurantId(cart.restaurantId)
-//   if (err) {
-//     return [status, err, msg]
-//   }
-
-//   ;[status, err, msg] = await validateAddress(customerId, cart.addressId)
-//   if (err) {
-//     return [status, err, msg]
-//   }
-
-//   const restaturant = await getRestaruant(restaurantId)
-//   if (restaturant.length === 0) {
-//     err = 'bad request'
-//     msg = 'restaurant not found'
-//     status = 404
-//     return [status, err, msg]
-//   }
-
-// async function validateAddress(customerId, addressId) {
-//     let status = null
-//     let msg = null
-//     let err = null
-//   const address = await getAddress(addressId)
-
-//   if (address.length === 0) {
-//     status = 404
-//     err = 'address not found'
-//     msg = 'customer address doesnot exist'
-//     return [status, err, msg]
-//   }
-
-//   const addressFound = address[0]
-//   if (addressFound.customer_id !== customerId) {
-//     status = 400
-//     err = 'address doesnt match'
-//     msg = 'given address doesnot match with saved addressess'
-//     return [status, err, msg]
-//   }
-
-//   return [status, err, msg]
-//   }
