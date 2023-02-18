@@ -1,47 +1,41 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addToCart, incrementCartItem, decrementCartItem, removeCartItem } from '../../store/actions'
+import { addToCart, incrementCartItem, decrementCartItem, removeCartItem, setRestaurantId } from '../../store/actions'
 
 function MenuItem({ item, restaurantId }) {
-  // const itemId = item.item_id
+  const dispatch = useDispatch()
   const [quantity, setQuantity] = useState(0)
+  const itemId = item.item_id
 
   const payload = { ...item }
 
-  const dispatch = useDispatch()
+  const cartitem = useSelector((state) => state.cart).find((item) => item.item_id === itemId)
 
-  const cart = useSelector((state) => state.cart)
-  // const cartitem = useSelector((state) => state.cart).find((item) => item.item_id === itemId)
-  // console.log('cartitem', cartitem)
+  useEffect(() => {
+    if (cartitem !== undefined) {
+      setQuantity(cartitem.quantity)
+      return
+    }
+    setQuantity(0)
+  }, [cartitem])
 
   function increment() {
-    console.log('payload', payload)
-    if (quantity === 'Add') {
+    if (quantity === 0) {
+      dispatch(setRestaurantId(restaurantId))
       dispatch(addToCart(payload))
-      setQuantity(1)
-    } else {
-      dispatch(incrementCartItem(payload))
-      setQuantity((current) => current + 1)
+      return
     }
+    dispatch(incrementCartItem(payload))
   }
 
   function decrement() {
-    if (quantity === 'Add') return
-    if (quantity === 1) {
-      dispatch(removeCartItem(payload))
-      setQuantity('Add')
+    if (quantity > 1) {
+      dispatch(decrementCartItem(payload))
       return
     }
-    dispatch(decrementCartItem(payload))
-    setQuantity((current) => current - 1)
+    dispatch(removeCartItem(payload))
   }
 
-  useEffect(() => {
-    if (cart.length === 0) {
-      setQuantity('Add')
-    }
-  }, [cart])
   return (
     <div className='menu-item'>
       <img src={item.img} alt='img' />
@@ -49,7 +43,7 @@ function MenuItem({ item, restaurantId }) {
       <p>price: {item.price}</p>
       <p>
         <button onClick={decrement}>-</button>
-        {quantity}
+        {quantity || 'Add'}
         <button onClick={increment}>+</button>
       </p>
     </div>
