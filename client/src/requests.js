@@ -1,13 +1,17 @@
 const baseUrl = 'http://localhost:3000'
 
-async function login(userName, password, userType) {
+async function login(userName, password) {
   const res = await fetch(`${baseUrl}/sessions`, {
     credentials: 'include',
     headers: { 'content-type': 'application/json' },
     method: 'POST',
-    body: JSON.stringify({ userName, password, userType })
+    body: JSON.stringify({ userName, password })
   })
-  return res.status
+  if (res.status !== 201) {
+    return [res.status, null]
+  }
+  const data = await res.json()
+  return [res.status, data.user_type]
 }
 
 async function authorizeMe() {
