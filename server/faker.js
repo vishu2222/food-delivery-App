@@ -12,8 +12,8 @@ const pool = new Pool({
   port: config.dbPort
 })
 
-const numRestaurants = 10
-const numItems = 10
+const numRestaurants = 2
+const numItems = 2
 const salt = await bcrypt.genSalt()
 
 async function insertRestaurantUsers() {
@@ -35,7 +35,11 @@ async function insertRestaurantUsers() {
     client.query('BEGIN')
 
     // inserting into users Table for restaurant users
-    client.query(`insert into users(user_name, user_type, password) values( $1, $2, $3)`, [user_name, user_type, password])
+    client.query(`insert into users(user_name, user_type, password) values( $1, $2, $3)`, [
+      user_name,
+      user_type,
+      password
+    ])
 
     const response = await client.query(`SELECT user_id  FROM users WHERE user_name= $1`, [user_name])
     const userId = response.rows[0].user_id
@@ -50,11 +54,13 @@ async function insertRestaurantUsers() {
 
     // inserting into food_items Table
     for (let item = 1; item <= numItems; item++) {
-      const itemName = `item${item}_res${i}`
-      const itemPrice = Math.random() * 10
+      const itemName = `item${item}`
+      const itemPrice = Math.round(Math.random() * 100)
       const itemImg = faker.image.imageUrl(150, 150, 'food', true)
 
-      const response = await client.query(`select restaurant_id from restaurant where restaurant_name=$1`, [restaurant_name])
+      const response = await client.query(`select restaurant_id from restaurant where restaurant_name=$1`, [
+        restaurant_name
+      ])
       const resId = response.rows[0].restaurant_id
 
       const query = `insert into food_item(item_name, price, restaurant_id, img) values($1, $2, $3, $4)`
@@ -93,38 +99,43 @@ async function insertACustomer() {
   const params = [customerName, phone, email, response.rows[0].user_id]
   await client.query(`INSERT INTO customer(customer_name, phone, email, user_id) VALUES ($1, $2, $3, $4);`, params)
 
+  const res = await client.query(`select * from customer where customer_name='customer1';`)
+  const customerId = res.rows[0].customer_id
+
+  await client.query(`insert into customer_address(lat, long, house_no, locality, city, customer_id)
+                      values(12.972442, 77.580643, 'H.No:1', 'locationA', 'Bangalore',${customerId})`)
+
   await client.query('COMMIT')
   client.release()
 }
 
 await insertACustomer()
 
-// async function insertACustomer() {
-//   const userName = `customer1`
-//   const userType = `customer`
-//   const password = await bcrypt.hash(`customer1`, salt)
-//   const customerName = 'customer1'
-//   const phone = 9999999999
-//   const email = 'customer1@email'
+async function insertAPartner() {
+  const userName = `partner1`
+  const userType = `delivery_partner`
+  const password = await bcrypt.hash(`partner1`, salt)
+  const partner_name = 'partner1'
+  const phone = 8888888888
 
-//   const client = await pool.connect()
-//   await client.query('BEGIN')
+  const client = await pool.connect()
+  await client.query('BEGIN')
 
-//   await client.query(
-//     `INSERT INTO users(user_name, user_type, password)
-//        VALUES ($1, $2, $3);`,
-//     [userName, userType, password]
-//   )
+  await client.query(
+    `INSERT INTO users(user_name, user_type, password)
+       VALUES ($1, $2, $3);`,
+    [userName, userType, password]
+  )
 
-//   const response = await client.query(`SELECT user_id
-//                                          FROM users
-//                                          WHERE created_at = (SELECT MAX(created_at) FROM users);`)
+  const response = await client.query(`SELECT user_id
+                                         FROM users
+                                         WHERE created_at = (SELECT MAX(created_at) FROM users);`)
 
-//   const params = [customerName, phone, email, response.rows[0].user_id]
-//   await client.query(`INSERT INTO customer(customer_name, phone, email, user_id) VALUES ($1, $2, $3, $4);`, params)
+  const params = [partner_name, phone, response.rows[0].user_id]
+  await client.query(`INSERT INTO delivery_partner(partner_name, phone, user_id) VALUES ($1, $2, $3);`, params)
 
-//   await client.query('COMMIT')
-//   client.release()
-// }
+  await client.query('COMMIT')
+  client.release()
+}
 
-// await insertAPartner()
+await insertAPartner()
