@@ -1,8 +1,9 @@
-import { getOrderId, placeOrder, getAllCustomerOrders, getAllRestaurantOrders } from '../models/orders.js'
-import { getItemPrices, fetchOrderDetails, getAllPartnersOrders } from '../models/orders.js'
-import { updateRestaurantConfirmation, updateDelivery, getItemNames } from '../models/orders.js'
-import { getRestaurantDetails, assignPartner, updatePickup, getOrderAmount } from '../models/orders.js'
-import socket from '../sockets.js'
+import { getOrderId, placeOrder, getAllCustomerOrders, getAllRestaurantOrders } from '../../models/orders.js'
+import { getItemPrices, fetchOrderDetails, getAllPartnersOrders } from '../../models/orders.js'
+import { updateRestaurantConfirmation, updateDelivery, getItemNames } from '../../models/orders.js'
+import { getRestaurantDetails, assignPartner, updatePickup, getOrderAmount } from '../../models/orders.js'
+import socket from '../../sockets.js'
+import { socketMap } from '../../models/socketMap.js'
 
 // create order example cart =  {"restaurantId":1, "addressId":1, "items":{"1":2, "2":3}}
 export async function createOrder(req, res) {
@@ -65,6 +66,7 @@ async function addOrderItemNames(orderItems) {
 // helper function
 async function sendNewOrderNotification(cartItems, order_time, totalAmount, restaurantId, order_id) {
   cartItems = await addOrderItemNames(cartItems)
+
   cartItems = {
     order_time,
     order_items: cartItems,
@@ -77,6 +79,7 @@ async function sendNewOrderNotification(cartItems, order_time, totalAmount, rest
     restaurantId,
     order: { order_id, ...cartItems }
   }
+
   notifyRestaurant(notification)
 }
 

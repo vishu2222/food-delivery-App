@@ -1,5 +1,5 @@
 import express from 'express'
-import { createOrder, getAllOrders, getOrderDetails, updateOrder } from '../controllers/orders.js'
+import { createOrder, getAllOrders, getOrderDetails, updateOrder } from '../controllers/orders/orders.js'
 import { validateCart } from '../middleware/validateCart.js'
 import { auth } from '../middleware/auth.js'
 
