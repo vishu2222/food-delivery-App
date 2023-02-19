@@ -19,8 +19,10 @@ export async function updateOrder(orderId, status) {
     method: 'PATCH',
     body: JSON.stringify({ status })
   })
+
   if (res.status !== 200) {
-    return [status.null]
+    return [status, null]
   }
+
   return [res.status, await res.json()]
 }
