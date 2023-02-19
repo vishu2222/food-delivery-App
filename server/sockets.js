@@ -4,12 +4,17 @@ let io
 let count = 0
 export default {
   init: (httpServer) => {
-    io = new Server(httpServer, { cors: { origin: ['*'] } })
+    io = new Server(httpServer, { cors: { origin: ['http://localhost:3001'] }, cookie: true, httpOnly: true })
+
+    io.use((socket, next) => {
+      socket.sessionId = socket.handshake.headers.cookie.split('sessionId=')[1]
+      // console.log(socket.sessionId)
+      next()
+    })
 
     io.on('connection', (socket) => {
       count++
       console.log('socket count', count)
-      console.log('socketId', socket.id)
 
       socket.on('disconnect', () => {
         count--

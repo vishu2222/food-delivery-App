@@ -2,7 +2,7 @@ import { getOrderId, placeOrder, getAllCustomerOrders, getAllRestaurantOrders } 
 import { getItemPrices, fetchOrderDetails, getAllPartnersOrders } from '../models/orders.js'
 import { updateRestaurantConfirmation, updateDelivery, getItemNames } from '../models/orders.js'
 import { getRestaurantDetails, assignPartner, updatePickup, getOrderAmount } from '../models/orders.js'
-import socket from '../models/partnerLocations.js'
+import socket from '../sockets.js'
 
 // create order example cart =  {"restaurantId":1, "addressId":1, "items":{"1":2, "2":3}}
 export async function createOrder(req, res) {
@@ -170,6 +170,7 @@ async function findNearestDeliveryPartner(restaurantDetails) {
 async function updatePartnersConfirmation(orderId, req, res) {
   // validate orderId format, check if order status is not cancelled before proceeding
   const orderStatus = req.body.status
+
   if (orderStatus === 'awaiting delivery') {
     const rowCount = await updatePickup(orderId)
     if (rowCount < 1) {
@@ -205,6 +206,7 @@ export async function getAllOrders(req, res) {
 
     if (req.userRole === 'restaurant') {
       const restaurantId = req.restaurantId
+
       let restaurantOrders = await getAllRestaurantOrders(restaurantId)
 
       for (let order of restaurantOrders) {
