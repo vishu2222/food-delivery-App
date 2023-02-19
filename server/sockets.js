@@ -1,4 +1,5 @@
 import { Server } from 'socket.io'
+import { socketMap } from './models/socketMap.js'
 
 let io
 let count = 0
@@ -8,7 +9,7 @@ export default {
 
     io.use((socket, next) => {
       socket.sessionId = socket.handshake.headers.cookie.split('sessionId=')[1]
-      // console.log(socket.sessionId)
+      socketMap[socket.sessionId] = socket.id
       next()
     })
 
