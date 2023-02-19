@@ -1,13 +1,13 @@
 import { getOrderId, placeOrder, getAllCustomerOrders, getAllRestaurantOrders } from '../../models/orders.js'
 import { getItemPrices, fetchOrderDetails, getAllPartnersOrders } from '../../models/orders.js'
-import { updateRestaurantConfirmation, updateDelivery, getItemNames } from '../../models/orders.js'
+import { updateRestaurantConfirmation, updateDelivery } from '../../models/orders.js'
 import { getRestaurantDetails, assignPartner, updatePickup, getOrderAmount } from '../../models/orders.js'
-import socket from '../../sockets.js'
-import { socketMap } from '../../models/socketMap.js'
+import { notifyPartner, notifyRestaurant, notifyCustomer } from './notifications.js'
+import { addOrderItemNames } from './addOrderItemNames.js'
+import { sendNewOrderNotification } from './notifications.js'
 
 // create order example cart =  {"restaurantId":1, "addressId":1, "items":{"1":2, "2":3}}
 export async function createOrder(req, res) {
-  // 400 validations are moved to middleware
   try {
     const cart = req.body
     const orderTime = Date.now()
@@ -49,38 +49,6 @@ export async function createOrder(req, res) {
     console.log(err)
     return res.status(500).json({ msg: 'unable to place the order' })
   }
-}
-
-// helper function
-async function addOrderItemNames(orderItems) {
-  let itemNames = await getItemNames(Object.keys(orderItems))
-
-  itemNames = itemNames.map((item) => {
-    item.quantity = orderItems[item.item_id]
-    return item
-  })
-
-  return itemNames
-}
-
-// helper function
-async function sendNewOrderNotification(cartItems, order_time, totalAmount, restaurantId, order_id) {
-  cartItems = await addOrderItemNames(cartItems)
-
-  cartItems = {
-    order_time,
-    order_items: cartItems,
-    total_price: totalAmount,
-    status: 'awaiting restaurant confirmation'
-  }
-
-  let notification = {
-    type: 'new-order',
-    restaurantId,
-    order: { order_id, ...cartItems }
-  }
-
-  notifyRestaurant(notification)
 }
 
 // update order by restaurant or delivarypartner
@@ -199,6 +167,7 @@ async function updatePartnersConfirmation(orderId, req, res) {
   return res.status(400).json({ msg: 'invalid confirmation' })
 }
 
+// getAllOrders
 export async function getAllOrders(req, res) {
   try {
     if (req.userRole === 'customer') {
@@ -232,48 +201,7 @@ export async function getAllOrders(req, res) {
   }
 }
 
-// helper function  notifications
-
-function notifyPartner(notification) {
-  try {
-    const io = socket.get()
-    if (notification.type === 'pickup') {
-      io.emit('partner-update', {
-        orderStatus: notification.status,
-        ...notification.restaurant,
-        orderId: notification.orderId
-      })
-    }
-  } catch (err) {
-    //
-  }
-}
-
-function notifyRestaurant(notification) {
-  try {
-    const io = socket.get()
-
-    if (notification.type === 'new-order') {
-      io.emit('new-order', notification.order)
-    }
-
-    if (notification.type === 'update') {
-      io.emit('restaurant-update', notification.orderStatus) //
-    }
-  } catch (err) {
-    //
-  }
-}
-
-function notifyCustomer(notification) {
-  try {
-    const io = socket.get()
-    io.emit('customer-update', notification.msg)
-  } catch (err) {
-    //
-  }
-}
-
+// getOrderDetails
 export async function getOrderDetails(req, res) {
   try {
     const customerId = req.customerId
