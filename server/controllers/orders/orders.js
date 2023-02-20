@@ -1,6 +1,6 @@
 import { getOrderId, placeOrder, getAllCustomerOrders, getAllRestaurantOrders } from '../../models/orders.js'
 import { getItemPrices, fetchOrderDetails, getAllPartnersOrders } from '../../models/orders.js'
-import { updateRestaurantConfirmation, updateDelivery } from '../../models/orders.js'
+import { updateRestaurantConfirmation, updateDelivery, getCustomerId } from '../../models/orders.js'
 import { getRestaurantDetails, assignPartner, updatePickup, getOrderAmount } from '../../models/orders.js'
 import { notifyPartner, notifyRestaurant, notifyCustomer } from './notifications.js'
 import { addOrderItemNames } from './addOrderItemNames.js'
@@ -74,29 +74,26 @@ export async function updateOrder(req, res) {
 
 async function updateRestaurantsConfirmation(orderId, req, res) {
   try {
-    const orderStatus = req.body.status
+    const orderStatusUpdate = req.body.status
     const restaurantId = req.restaurantId
 
-    if (orderStatus === 'restaurant rejected') {
-      const rowCount = await updateRestaurantConfirmation(orderId, orderStatus)
-      if (rowCount < 1) return res.status(404).json({ msg: 'order not found' })
-      res.json({ msg: orderStatus })
-      notifyCustomer({ msg: orderStatus })
-      return
+    if (!['restaurant rejected', 'searching for delivery partner'].includes(orderStatusUpdate)) {
+      return res.status(400).json({ msg: 'invalid order status' })
     }
 
-    if (orderStatus === 'searching for delivery partner') {
-      const rowCount = await updateRestaurantConfirmation(orderId, orderStatus)
-      if (rowCount < 1) return res.status(404).json({ msg: 'order not found' })
-      res.json({ msg: orderStatus })
+    await updateRestaurantConfirmation(orderId, orderStatusUpdate)
+    res.json({ msg: orderStatusUpdate })
 
-      notifyCustomer({ msg: orderStatus })
+    const customerId = await getCustomerId(orderId)
+    notifyCustomer({ type: 'update', orderStatus: orderStatusUpdate, customerId })
+
+    if (orderStatusUpdate !== 'restaurant rejected') {
       assignDeliveryPartner(restaurantId, orderId)
-      return
     }
-
-    return res.status(400).json({ msg: 'invalid order status' })
   } catch (error) {
+    if (error.message === 'orderNotFound') {
+      return res.status(404).json({ msg: 'order not found' })
+    }
     //
   }
 }
@@ -109,7 +106,6 @@ async function assignDeliveryPartner(restaurantId, orderId) {
     await assignPartner(orderId, partnerId)
 
     const orderStatus = 'awaiting pickup'
-
     const orderAmount = await getOrderAmount(orderId)
 
     const notification = {
@@ -117,17 +113,17 @@ async function assignDeliveryPartner(restaurantId, orderId) {
       restaurant: restaurantDetails[0],
       status: orderStatus,
       orderId,
-      total_price: orderAmount
+      orderAmount
     }
 
     notifyPartner(notification)
     notifyRestaurant({ type: 'update', orderStatus })
-    notifyCustomer({ msg: orderStatus })
+    notifyCustomer({ type: 'update', orderStatus })
   } catch (error) {
     // need to retry before cancelling
     const orderStatus = 'cancelled'
     notifyRestaurant({ type: 'update', orderStatus })
-    notifyCustomer({ msg: orderStatus })
+    notifyCustomer({ type: 'update', orderStatus })
   }
 }
 
@@ -143,25 +139,26 @@ async function updatePartnersConfirmation(orderId, req, res) {
   const orderStatus = req.body.status
 
   if (orderStatus === 'awaiting delivery') {
-    const rowCount = await updatePickup(orderId)
-    if (rowCount < 1) {
+    const insertRowCount = await updatePickup(orderId)
+
+    if (insertRowCount < 1) {
       return res.status(404).json({ msg: 'order not found' })
     }
 
     res.json({ msg: orderStatus })
     notifyRestaurant({ type: 'update', orderStatus })
-    notifyCustomer({ msg: orderStatus })
+    notifyCustomer({ type: 'update', orderStatus })
     return
   }
 
   if (orderStatus === 'delivered') {
-    const rowCount = await updateDelivery(orderId)
-    if (rowCount < 1) {
+    const insertRowCount = await updateDelivery(orderId)
+    if (insertRowCount < 1) {
       return res.status(404).json({ msg: 'order not found' })
     }
 
     res.json({ msg: orderStatus })
-    notifyCustomer({ msg: orderStatus })
+    notifyCustomer({ type: 'update', orderStatus })
     return
   }
   return res.status(400).json({ msg: 'invalid confirmation' })
@@ -204,7 +201,7 @@ export async function getAllOrders(req, res) {
 // getOrderDetails
 export async function getOrderDetails(req, res) {
   try {
-    const customerId = req.customerId
+    // const customerId = req.customerId
     const orderId = req.params.orderId // need to validate orderId format
 
     let orderDetails = await fetchOrderDetails(orderId)
