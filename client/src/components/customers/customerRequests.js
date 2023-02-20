@@ -9,6 +9,16 @@ async function registerCustomer(body) {
   return res.status
 }
 
+async function getOrderDetails(orderId) {
+  const res = await fetch(`${baseUrl}/orders/${orderId}`, {
+    credentials: 'include'
+  })
+  if (res.status !== 200) {
+    return [res.status, null]
+  }
+  return [res.status, await res.json()]
+}
+
 export async function getRestaurants() {
   const res = await fetch(`${baseUrl}/restaurants`)
   const response = await res.json()
@@ -59,7 +69,8 @@ async function addNewAddress(address) {
 const requests = {
   registerCustomer: registerCustomer,
   getRestaurants: getRestaurants,
-  addNewAddress: addNewAddress
+  addNewAddress: addNewAddress,
+  getOrderDetails: getOrderDetails
 }
 
 export default requests
