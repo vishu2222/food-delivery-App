@@ -9,13 +9,12 @@ export async function auth(req, res, next) {
     const sessionId = req.cookies.sessionId
     const session = await getSessionUserDetails(sessionId)
 
-    if (session.session_id !== sessionId) return res.sendStatus(401)
-
-    req.userName = session.user_name
+    req.userId = session.user_id
     req.userRole = session.user_type
     req.customerId = session.customer_id
     req.restaurantId = session.restaurant_id
     req.partnerId = session.partner_id
+    req.sessionId = sessionId
 
     next()
   } catch (error) {
