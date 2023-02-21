@@ -26,9 +26,24 @@ function RestaurantHome() {
         return order
       })
 
+      console.log(ordersList)
       setOrders(ordersList)
     })()
   }, [navigate])
+
+  function updateOrder(orderId, orderStatus) {
+    const updatedOrders = orders.map((order) => {
+      if (order.order_id === Number(orderId)) {
+        order['status'] = orderStatus
+        return order
+      }
+      return order
+    })
+
+    setOrders(updatedOrders)
+  }
+
+  // console.log('ordersState:', orders)
 
   useEffect(() => {
     socket.connect()
@@ -42,19 +57,26 @@ function RestaurantHome() {
       setOrders((currentOrders) => [order, ...currentOrders])
     })
 
+    socket.on('restaurant-update', (notification) => {
+      updateOrder(notification.order_id, notification.status)
+    })
+
     return () => {
       socket.off('connect')
       socket.off('new-order')
+      socket.off('restaurant-update')
     }
   }, [orders])
 
   return (
     <div>
+      <h1>Restaurant Home</h1>
       <h2>Orders</h2>
       {orders.map((order, index) => {
         return (
           <div key={index}>
-            <Order order={order} index={index} />
+            {/* can key be same for eachChild or unique? if unique why i get no error? */}
+            <Order order={order} index={index} key={order.status + index} />
           </div>
         )
       })}
@@ -63,3 +85,4 @@ function RestaurantHome() {
 }
 
 export default RestaurantHome
+// key={order.status + index}
