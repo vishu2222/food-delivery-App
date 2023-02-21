@@ -1,5 +1,6 @@
 import socket from '../../sockets.js'
-import { socketMap } from '../../models/socketMap.js'
+import { restaurantMap, partnerMap, customerMap } from '../../models/socketMap.js'
+import { addOrderItemNames } from './addOrderItemNames.js'
 
 export async function sendNewOrderNotification(cartItems, order_time, totalAmount, restaurantId, order_id) {
   cartItems = await addOrderItemNames(cartItems)
@@ -20,14 +21,18 @@ export async function sendNewOrderNotification(cartItems, order_time, totalAmoun
   notifyRestaurant(notification)
 }
 
-export function notifyPartner(notification) {
+export function notifyRestaurant(notification) {
   try {
     const io = socket.get()
-    if (notification.type === 'pickup') {
-      io.emit('partner-update', {
-        orderStatus: notification.status,
-        ...notification.restaurant,
-        orderId: notification.orderId
+
+    if (notification.type === 'new-order') {
+      io.to(restaurantMap[notification.restaurantId]).emit('new-order', notification.order)
+    }
+
+    if (notification.type === 'update') {
+      io.to(restaurantMap[notification.restaurantId]).emit('restaurant-update', {
+        status: notification.orderStatus,
+        order_id: notification.orderId
       })
     }
   } catch (err) {
@@ -35,16 +40,16 @@ export function notifyPartner(notification) {
   }
 }
 
-export function notifyRestaurant(notification) {
+export function notifyPartner(notification) {
   try {
     const io = socket.get()
-
-    if (notification.type === 'new-order') {
-      io.emit('new-order', notification.order)
-    }
-
-    if (notification.type === 'update') {
-      io.emit('restaurant-update', notification.orderStatus) //
+    if (notification.type === 'pickup') {
+      io.to(partnerMap[notification.partnerId]).emit('partner-update', {
+        status: notification.status,
+        ...notification.restaurant,
+        order_id: notification.orderId,
+        total_price: notification.orderAmount
+      })
     }
   } catch (err) {
     //
@@ -54,7 +59,9 @@ export function notifyRestaurant(notification) {
 export function notifyCustomer(notification) {
   try {
     const io = socket.get()
-    io.emit('customer-update', notification.msg)
+    if (notification.type === 'update') {
+      io.to(customerMap[notification.customerId]).emit('customer-update', notification.orderStatus)
+    }
   } catch (err) {
     //
   }
