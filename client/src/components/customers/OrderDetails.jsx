@@ -33,7 +33,7 @@ function OrderDetails() {
       setOrderStatus(response.status)
       setTotalPrice(response.total_price)
 
-      console.log(response)
+      // console.log(response)
     })()
   }, [orderId])
 
@@ -43,20 +43,13 @@ function OrderDetails() {
       console.log('socket connected')
     })
 
-    // socket.on('restaurant-update', (status) => {
-    //   if (status.msg === 'accepted') {
-    //     setDisplayMsg(`order confirmed by restaurant, allocating delivary partner...`)
-    //   }
-    //   if (status.msg === 'declined') {
-    //     setDisplayMsg(`order declined by restaurant`)
-    //   }
-    //   if (status.msg === 'server-err') {
-    //     setDisplayMsg(`sorry, unable to get restaurant's confirmation due to internal error`)
-    //   }
-    // })
+    socket.on('customer-update', (orderStatus) => {
+      console.log('recived update, OrderStatus:', orderStatus)
+      setOrderStatus(orderStatus)
+    })
 
     return () => {
-      socket.off('restaurant-update')
+      socket.off('customer-update')
       socket.off('connect')
     }
   }, [])
