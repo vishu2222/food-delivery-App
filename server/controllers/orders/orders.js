@@ -1,8 +1,9 @@
 import { getOrderId, placeOrder, getAllCustomerOrders, getAllRestaurantOrders } from '../../models/orders.js'
-import { getItemPrices, fetchOrderDetails, getAllPartnersOrders } from '../../models/orders.js'
+import { getItemPrices, fetchOrderDetails, getAllPartnersOrders, getOrder } from '../../models/orders.js'
 import { updateRestaurantConfirmation, updateDelivery, getCustomerId } from '../../models/orders.js'
 import { getRestaurantDetails, assignPartner, updatePickup, getOrderAmount } from '../../models/orders.js'
 import { notifyPartner, notifyRestaurant, notifyCustomer } from './notifications.js'
+import { validateOrderUpdate } from './validateOrderUpdate.js'
 import { addOrderItemNames } from './addOrderItemNames.js'
 import { sendNewOrderNotification } from './notifications.js'
 
@@ -43,7 +44,8 @@ export async function createOrder(req, res) {
   } catch (err) {
     if (err.code === '23503' && err.table === 'orders') {
       // in db fk constraint gets voilated when invalid address is given
-      return res.status(404).json({ msg: 'given address id not found' })
+      // move to model
+      return res.status().json({ msg: 'given address id not found' })
     }
 
     console.log(err)
@@ -77,14 +79,16 @@ async function updateRestaurantsConfirmation(orderId, req, res) {
     const orderStatusUpdate = req.body.status
     const restaurantId = req.restaurantId
 
-    if (!['restaurant rejected', 'searching for delivery partner'].includes(orderStatusUpdate)) {
-      return res.status(400).json({ msg: 'invalid order status' })
-    }
+    const order = await getOrder(orderId)
+    const currentStatus = order.status
+
+    const isUpdateValid = validateOrderUpdate(orderStatusUpdate, currentStatus, 'restaurant', req, res)
+    if (isUpdateValid === 'updateNotAllowed') return
 
     await updateRestaurantConfirmation(orderId, orderStatusUpdate)
     res.json({ msg: orderStatusUpdate })
 
-    const customerId = await getCustomerId(orderId)
+    const customerId = await getCustomerId(orderId) // get it from previous query getOrder
     notifyCustomer({ type: 'update', orderStatus: orderStatusUpdate, customerId })
 
     if (orderStatusUpdate !== 'restaurant rejected') {
@@ -108,22 +112,29 @@ async function assignDeliveryPartner(restaurantId, orderId) {
     const orderStatus = 'awaiting pickup'
     const orderAmount = await getOrderAmount(orderId)
 
-    const notification = {
+    const partnerNotification = {
       type: 'pickup',
       restaurant: restaurantDetails[0],
       status: orderStatus,
       orderId,
-      orderAmount
+      orderAmount,
+      partnerId
     }
 
-    notifyPartner(notification)
-    notifyRestaurant({ type: 'update', orderStatus })
-    notifyCustomer({ type: 'update', orderStatus })
+    const customerId = await getCustomerId(orderId)
+    console.log('orderStatus:', orderStatus, 'customerId:', customerId)
+
+    notifyPartner(partnerNotification)
+    notifyRestaurant({ type: 'update', orderId, orderStatus, restaurantId })
+    notifyCustomer({ type: 'update', orderStatus, customerId })
   } catch (error) {
+    if (error.message === 'orderNotFound') {
+      //
+    }
     // need to retry before cancelling
     const orderStatus = 'cancelled'
-    notifyRestaurant({ type: 'update', orderStatus })
-    notifyCustomer({ type: 'update', orderStatus })
+    // notifyRestaurant({ type: 'update', orderStatus })
+    // notifyCustomer({ type: 'update', orderStatus })
   }
 }
 
@@ -135,33 +146,33 @@ async function findNearestDeliveryPartner(restaurantDetails) {
 }
 
 async function updatePartnersConfirmation(orderId, req, res) {
-  // validate orderId format, check if order status is not cancelled before proceeding
-  const orderStatus = req.body.status
+  try {
+    const orderStatusUpdate = req.body.status
 
-  if (orderStatus === 'awaiting delivery') {
-    const insertRowCount = await updatePickup(orderId)
+    const orderDetails = await getOrder(orderId)
+    const currentStatus = orderDetails.status
 
-    if (insertRowCount < 1) {
+    const isUpdateValid = validateOrderUpdate(orderStatusUpdate, currentStatus, 'partner', req, res)
+    if (isUpdateValid === 'updateNotAllowed') return
+
+    await updateDelivery(orderId, orderStatusUpdate)
+    res.json({ msg: orderStatusUpdate })
+
+    notifyCustomer({ type: 'update', orderStatus: orderStatusUpdate, customerId: orderDetails.customer_id })
+    if (orderStatusUpdate === 'awaiting delivery') {
+      notifyRestaurant({
+        type: 'update',
+        orderStatus: orderStatusUpdate,
+        restaurantId: orderDetails.restaurant_id,
+        orderId
+      })
+    }
+  } catch (error) {
+    if (error.message === 'orderNotFound') {
       return res.status(404).json({ msg: 'order not found' })
     }
-
-    res.json({ msg: orderStatus })
-    notifyRestaurant({ type: 'update', orderStatus })
-    notifyCustomer({ type: 'update', orderStatus })
-    return
+    res.sendStatus(500)
   }
-
-  if (orderStatus === 'delivered') {
-    const insertRowCount = await updateDelivery(orderId)
-    if (insertRowCount < 1) {
-      return res.status(404).json({ msg: 'order not found' })
-    }
-
-    res.json({ msg: orderStatus })
-    notifyCustomer({ type: 'update', orderStatus })
-    return
-  }
-  return res.status(400).json({ msg: 'invalid confirmation' })
 }
 
 // getAllOrders
