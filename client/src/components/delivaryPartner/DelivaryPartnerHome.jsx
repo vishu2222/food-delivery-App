@@ -28,7 +28,7 @@ function DelivaryPartnerHome() {
         return order
       })
 
-      console.log(ordersList)
+      console.log('ordersList:', ordersList)
       setOrders(ordersList)
     })()
   }, [navigate])
@@ -45,7 +45,7 @@ function DelivaryPartnerHome() {
     })
 
     socket.on('partner-update', (newOrder) => {
-      console.log('newOrder', newOrder)
+      console.log('newOrder:', newOrder)
       setOrders((current) => [newOrder, ...current])
     })
 
@@ -66,13 +66,22 @@ function DelivaryPartnerHome() {
     console.log('err:', err.message)
   }
 
-  // setInterval(() => {
-  //   navigator.geolocation.getCurrentPosition(getMyPosition, error)
-  //   console.log(lat, long)
-  // }, 50000)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      navigator.geolocation.getCurrentPosition(getMyPosition, error)
+    }, 30000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
 
   return (
     <div>
+      <h1>Delivary Partner Home</h1>
+      <p>
+        My position: lattitude: {lat}, longitude: {long}
+      </p>
       <h2>Orders</h2>
       {orders.map((order, index) => {
         return (
