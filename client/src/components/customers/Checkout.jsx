@@ -46,7 +46,7 @@ function Checkout() {
     }
 
     dispatch(clearCart())
-    navigate(`../order-details/${orderId}`, { replace: true })
+    navigate(`../order-details/${orderId}`)
   }
 
   return (
