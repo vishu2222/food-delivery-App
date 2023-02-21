@@ -5,10 +5,6 @@ import MenuItem from './MenuItem'
 import Cart from './Cart'
 import { useSelector } from 'react-redux'
 
-// import { io } from 'socket.io-client'
-
-// const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
-
 function ShowRestaurant() {
   const [restaurant, setRestaurant] = useState({})
   const [menu, setMenu] = useState([])
@@ -33,30 +29,6 @@ function ShowRestaurant() {
       setMenu(response.menu)
     })()
   }, [restaurantId])
-
-  // useEffect(() => {
-  //   socket.connect()
-
-  //   socket.on('connect', () => {
-  //     console.log('socket connected')
-  //   })
-
-  //   socket.on('restaurant-update', (status) => {
-  //     if (status.msg === 'accepted') {
-  //       setDisplayMsg(`order confirmed by restaurant, allocating delivary partner...`)
-  //     }
-  //     if (status.msg === 'declined') {
-  //       setDisplayMsg(`order declined by restaurant`)
-  //     }
-  //     if (status.msg === 'server-err') {
-  //       setDisplayMsg(`sorry, unable to get restaurant's confirmation due to internal error`)
-  //     }
-  //   })
-  //   return () => {
-  //     socket.off('restaurant-update')
-  //     socket.off('connect')
-  //   }
-  // }, [])
 
   function gotoCheckOut() {
     if (cart.length === 0) {
