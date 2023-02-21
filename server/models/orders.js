@@ -10,6 +10,16 @@ const pool = new Pool({
   port: config.dbPort
 })
 
+export async function getOrder(orderId) {
+  const query = `select * from orders where order_id=$1`
+  const params = [orderId]
+  const res = await pool.query(query, params)
+  if (res.rowCount < 1) throw new Error('orderNotFound')
+  return res.rows[0]
+}
+
+// console.log(await getOrder(43))
+
 export async function getOrderId(customerId, restaurantId) {
   const query = `SELECT order_id
                  FROM orders 
@@ -91,7 +101,7 @@ export async function updateRestaurantConfirmation(orderId, statusUpdate) {
                  WHERE order_id = $1`
   const params = [orderId, statusUpdate]
   const res = await pool.query(query, params)
-  return res.rowCount
+  if (res.rowCount < 1) throw new Error('orderNotFound')
 }
 
 export async function getItemNames(itemIds) {
@@ -124,16 +134,25 @@ export async function updatePickup(orderId) {
                  WHERE order_id = $1;`
   const params = [orderId]
   const res = await pool.query(query, params)
-  return res.rowCount
+  if (res.rowCount < 1) return new Error('orderNotFound')
 }
 
-export async function updateDelivery(orderId) {
+// export async function updateDelivery(orderId) {
+//   const query = `UPDATE orders
+//                  SET status = 'delivered'
+//                  WHERE order_id = $1;`
+//   const params = [orderId]
+//   const res = await pool.query(query, params)
+//   if (res.rowCount < 1) return new Error('orderNotFound')
+// }
+
+export async function updateDelivery(orderId, status) {
   const query = `UPDATE orders
-                 SET status = 'delivered'
+                 SET status = $2
                  WHERE order_id = $1;`
-  const params = [orderId]
+  const params = [orderId, status]
   const res = await pool.query(query, params)
-  return res.rowCount
+  if (res.rowCount < 1) return new Error('orderNotFound')
 }
 
 export async function getOrderAmount(orderId) {
@@ -141,6 +160,15 @@ export async function getOrderAmount(orderId) {
   const params = [orderId]
   const res = await pool.query(query, params)
   return res.rows[0].total_price // can throw error if orderId is invalid
+}
+
+export async function getCustomerId(orderId) {
+  const query = `select customer_id from orders where order_id=$1`
+  const params = [orderId]
+
+  const res = await pool.query(query, params)
+  if (res.rowCount < 1) throw new Error('orderNotFound')
+  return res.rows[0].customer_id
 }
 
 // export async function updateDeliveryConfirmation(orderId, statusUpdate) {
