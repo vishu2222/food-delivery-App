@@ -1,9 +1,9 @@
 import { Server } from 'socket.io'
 import { restaurantMap, partnerMap, customerMap } from './models/socketMap.js'
 import { getSessionUserDetails } from './models/sessions.js'
+import { partnerLocations } from './models/partnerLiveLocations.js'
 
 let io
-let count = 0
 export default {
   init: (httpServer) => {
     io = new Server(httpServer, { cors: { origin: ['http://localhost:3001'] }, cookie: true, httpOnly: true })
@@ -15,14 +15,17 @@ export default {
 
         if (session.user_type === 'restaurant') {
           restaurantMap[session.restaurant_id] = socket.id
+          socket.restaurantId = session.restaurant_id
         }
 
         if (session.user_type === 'customer') {
           customerMap[session.customer_id] = socket.id
+          socket.customerId = session.customer_id
         }
 
         if (session.user_type === 'delivery_partner') {
           partnerMap[session.partner_id] = socket.id
+          socket.partnerId = session.partner_id
         }
 
         next()
@@ -32,11 +35,8 @@ export default {
     })
 
     io.on('connection', (socket) => {
-      count++
-      console.log('socket count', count)
-
-      socket.on('disconnect', () => {
-        count--
+      socket.on('partnerLiveLocation', (location) => {
+        partnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
       })
     })
   },
@@ -51,7 +51,13 @@ export default {
 
 // socket.userId = session.user_id
 // socket.userRole = session.user_type
-// socket.customerId = session.customer_id
-// socket.restaurantId = session.restaurant_id
+//
+//
 // socket.partnerId = session.partner_id
 // socket.sessionId = sessionId
+
+// count++
+// socket.on('disconnect', () => {
+//   count--
+// })
+// console.log('socket count', count)
