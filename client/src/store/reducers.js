@@ -1,16 +1,20 @@
 const initialState = {
   cart: [],
   restaurantId: null,
-  delivaryAddressId: null
+  delivaryAddress: {},
+  partnerLocation: { lat: null, long: null }
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'partnerLocationUpdate':
+      return { ...state, partnerLocation: action.payload }
+
     case 'add/restaurant':
       return { ...state, restaurantId: action.payload }
 
     case 'delivary/address':
-      return { ...state, delivaryAddressId: action.payload }
+      return { ...state, delivaryAddress: action.payload }
 
     case 'clear/address':
       return { ...state, delivaryAddressId: null }

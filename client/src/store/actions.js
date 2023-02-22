@@ -1,3 +1,10 @@
+export const updatePartnerLocation = (position) => {
+  return {
+    type: 'partnerLocationUpdate',
+    payload: position
+  }
+}
+
 export const setRestaurantId = (restaurantId) => {
   return {
     type: 'add/restaurant',
@@ -46,10 +53,17 @@ export const clearCart = () => {
   }
 }
 
-export const setDelivaryAddress = (addressId) => {
+// export const setDelivaryAddress = (addressId) => {
+//   return {
+//     type: 'delivary/address',
+//     payload: addressId
+//   }
+// }
+
+export const setDelivaryAddress = (address) => {
   return {
     type: 'delivary/address',
-    payload: addressId
+    payload: address
   }
 }
 
