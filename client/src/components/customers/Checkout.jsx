@@ -25,7 +25,7 @@ function Checkout() {
   async function createOrder() {
     setDisplayMsg('processing order...')
 
-    const addressId = state.delivaryAddressId
+    const addressId = state.delivaryAddress.address_id
     if (addressId === null) {
       setDisplayMsg('please select a delivary address')
       return
