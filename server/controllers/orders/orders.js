@@ -83,18 +83,18 @@ async function updateRestaurantsConfirmation(orderId, req, res) {
 
     const order = await getOrder(orderId)
     const currentStatus = order.status
+    const customerId = order.customer_id
 
-    const isUpdateValid = validateOrderUpdate(orderStatusUpdate, currentStatus, 'restaurant', req, res)
-    if (isUpdateValid === 'updateNotAllowed') return
+    const updateValid = validateOrderUpdate(orderStatusUpdate, currentStatus, 'restaurant', req, res)
+    if (!updateValid) return
 
-    await updateRestaurantConfirmation(orderId, orderStatusUpdate)
+    await updateRestaurantConfirmation(orderId, orderStatusUpdate) //db query
     res.json({ msg: orderStatusUpdate })
 
-    const customerId = await getCustomerId(orderId) // get it from previous query getOrder
     notifyCustomer({ type: 'update', orderStatus: orderStatusUpdate, customerId })
 
     if (orderStatusUpdate !== 'restaurant rejected') {
-      assignDeliveryPartner(restaurantId, orderId)
+      assignDeliveryPartner(restaurantId, orderId, customerId)
     }
   } catch (error) {
     if (error.message === 'orderNotFound') {
@@ -104,15 +104,17 @@ async function updateRestaurantsConfirmation(orderId, req, res) {
   }
 }
 
-async function assignDeliveryPartner(restaurantId, orderId) {
+async function assignDeliveryPartner(restaurantId, orderId, customerId) {
   try {
     const restaurantDetails = await getRestaurantDetails(restaurantId)
+
     const partnerId = await findNearestDeliveryPartner(restaurantDetails[0])
 
     await assignPartner(orderId, partnerId)
 
-    const orderStatus = 'awaiting pickup'
-    const orderAmount = await getOrderAmount(orderId)
+    const orderDetails = await getOrder(orderId)
+    const orderAmount = orderDetails.total_price
+    const orderStatus = orderDetails.status //'awaiting pickup'
 
     const partnerNotification = {
       type: 'pickup',
@@ -123,8 +125,6 @@ async function assignDeliveryPartner(restaurantId, orderId) {
       partnerId
     }
 
-    const customerId = await getCustomerId(orderId)
-
     notifyPartner(partnerNotification)
     notifyRestaurant({ type: 'update', orderId, orderStatus, restaurantId })
     notifyCustomer({ type: 'update', orderStatus, customerId })
@@ -133,13 +133,14 @@ async function assignDeliveryPartner(restaurantId, orderId) {
       //
     }
     // need to retry before cancelling
-    const orderStatus = 'cancelled'
+    // const orderStatus = 'cancelled'
     // notifyRestaurant({ type: 'update', orderStatus })
     // notifyCustomer({ type: 'update', orderStatus })
   }
 }
 
 async function findNearestDeliveryPartner(restaurantDetails) {
+  console.log('partnerLocations:', partnerLocations)
   const lat = restaurantDetails.lat
   const long = restaurantDetails.long
   let partnerId
@@ -163,8 +164,8 @@ async function updatePartnersConfirmation(orderId, req, res) {
     const orderDetails = await getOrder(orderId)
     const currentStatus = orderDetails.status
 
-    const isUpdateValid = validateOrderUpdate(orderStatusUpdate, currentStatus, 'partner', req, res)
-    if (isUpdateValid === 'updateNotAllowed') return
+    const updateValid = validateOrderUpdate(orderStatusUpdate, currentStatus, 'partner', req, res)
+    if (!updateValid) return
 
     await updateDelivery(orderId, orderStatusUpdate)
     res.json({ msg: orderStatusUpdate })
