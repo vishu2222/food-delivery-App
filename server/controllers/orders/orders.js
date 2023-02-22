@@ -1,11 +1,13 @@
 import { getOrderId, placeOrder, getAllCustomerOrders, getAllRestaurantOrders } from '../../models/orders.js'
 import { getItemPrices, fetchOrderDetails, getAllPartnersOrders, getOrder } from '../../models/orders.js'
 import { updateRestaurantConfirmation, updateDelivery, getCustomerId } from '../../models/orders.js'
-import { getRestaurantDetails, assignPartner, updatePickup, getOrderAmount } from '../../models/orders.js'
+import { getRestaurantDetails, assignPartner, getOrderAmount } from '../../models/orders.js'
 import { notifyPartner, notifyRestaurant, notifyCustomer } from './notifications.js'
 import { validateOrderUpdate } from './validateOrderUpdate.js'
 import { addOrderItemNames } from './addOrderItemNames.js'
 import { sendNewOrderNotification } from './notifications.js'
+import { partnerLocations } from '../../models/partnerLiveLocations.js'
+import { getDistance } from 'geolib'
 
 // create order example cart =  {"restaurantId":1, "addressId":1, "items":{"1":2, "2":3}}
 export async function createOrder(req, res) {
@@ -105,7 +107,7 @@ async function updateRestaurantsConfirmation(orderId, req, res) {
 async function assignDeliveryPartner(restaurantId, orderId) {
   try {
     const restaurantDetails = await getRestaurantDetails(restaurantId)
-    const partnerId = await findNearestDeliveryPartner(restaurantDetails)
+    const partnerId = await findNearestDeliveryPartner(restaurantDetails[0])
 
     await assignPartner(orderId, partnerId)
 
@@ -122,7 +124,6 @@ async function assignDeliveryPartner(restaurantId, orderId) {
     }
 
     const customerId = await getCustomerId(orderId)
-    console.log('orderStatus:', orderStatus, 'customerId:', customerId)
 
     notifyPartner(partnerNotification)
     notifyRestaurant({ type: 'update', orderId, orderStatus, restaurantId })
@@ -139,10 +140,20 @@ async function assignDeliveryPartner(restaurantId, orderId) {
 }
 
 async function findNearestDeliveryPartner(restaurantDetails) {
-  // need to search and find from streaming data of partners locations
-  // if not found make few retry attempts and cancell the order and update restaurant and customer
-  const partnerId = 1
-  return partnerId
+  const lat = restaurantDetails.lat
+  const long = restaurantDetails.long
+  let partnerId
+  let max = Infinity
+
+  for (let key of Object.keys(partnerLocations)) {
+    let distance = getDistance(partnerLocations[key], { latitude: lat, longitude: long })
+    if (distance < max) {
+      max = distance
+      partnerId = key
+    }
+  }
+
+  return Number(partnerId)
 }
 
 async function updatePartnersConfirmation(orderId, req, res) {
