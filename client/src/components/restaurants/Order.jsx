@@ -26,6 +26,7 @@ function Order({ order, index }) {
   return (
     <div>
       <h3>{index + 1}.Order Details</h3>
+      <p>Order-id: {orderId}</p>
       <p>order Time: {orderTime}</p>
       <p>Status: {status}</p>
       <p>Total price: ₹{totalPrice}</p>
