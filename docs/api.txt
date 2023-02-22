@@ -4,7 +4,7 @@
 1) LOGIN AND REGISTRATION REQUESTS            RESOURCE-PATH                           CONTROLLER
  
 userRegisters                                 POST  /users                             registerUser
-getNewSession                                 POST  /sessions                          loginUser
+acquireNewSession                             POST  /sessions                          loginUser
 getSession                                    GET   /sessions                          authorizeMe
 
 
