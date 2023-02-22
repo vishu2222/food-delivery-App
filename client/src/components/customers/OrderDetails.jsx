@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom'
 import requests from './customerRequests.js'
 import { formatTime } from '../utlities/formateTime.js'
 import { io } from 'socket.io-client'
+// import { useDispatch, useSelector } from 'react-redux'
+import Map from './Map.jsx'
 
 const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
 
@@ -17,14 +19,17 @@ function OrderDetails() {
   const [restaurantName, setRestaurantName] = useState('')
   const [orderStatus, setOrderStatus] = useState('awaiting restaurants confirmation')
   const [totalPrice, setTotalPrice] = useState('')
+  // const dispatch = useDispatch()
 
   useEffect(() => {
     ;(async () => {
       const [status, response] = await requests.getOrderDetails(orderId)
+
       if (status !== 200) {
         setDisplayMsg('unable to get order details')
         return
       }
+
       setOrderItems(response.order_items)
       setOrderTime(formatTime(response.order_time))
       setPartnerName(response.partner_name)
@@ -32,8 +37,6 @@ function OrderDetails() {
       setRestaurantName(response.restaurant_name)
       setOrderStatus(response.status)
       setTotalPrice(response.total_price)
-
-      // console.log(response)
     })()
   }, [orderId])
 
@@ -44,7 +47,6 @@ function OrderDetails() {
     })
 
     socket.on('customer-update', (orderStatus) => {
-      console.log('recived update, OrderStatus:', orderStatus)
       setOrderStatus(orderStatus)
     })
 
@@ -57,6 +59,7 @@ function OrderDetails() {
   return (
     <div>
       <h2>OrderDetails</h2>
+
       <p>{displayMsg}</p>
       <p>Id: {orderId}</p>
       <p>Order time: {orderTime}</p>
@@ -71,6 +74,9 @@ function OrderDetails() {
       ))}
       <p>Delivary person: {partnerName}</p>
       <p>Phone: {phone}</p>
+      <div>
+        <Map />
+      </div>
     </div>
   )
 }
