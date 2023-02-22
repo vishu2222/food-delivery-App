@@ -28,7 +28,6 @@ function DelivaryPartnerHome() {
         return order
       })
 
-      console.log('ordersList:', ordersList)
       setOrders(ordersList)
     })()
   }, [navigate])
@@ -49,32 +48,54 @@ function DelivaryPartnerHome() {
       setOrders((current) => [newOrder, ...current])
     })
 
+    socket.emit('partnerLiveLocation', { lat, long })
+
     return () => {
       socket.off('connect')
-      socket.off('disconnected')
+      socket.off('disconnect')
       socket.off('partner-update')
+      socket.off('partnerLiveLocation')
     }
-  }, [])
-
-  function getMyPosition(position) {
-    setLat(position.coords.latitude)
-    setLong(position.coords.longitude)
-  }
-
-  function error(err) {
-    // err can occur due to internet disconnectivity
-    console.log('err:', err.message)
-  }
+  }, [lat, long])
 
   useEffect(() => {
+    function getMyPosition(position) {
+      setLat(position.coords.latitude)
+      setLong(position.coords.longitude)
+      console.log(position.coords.latitude)
+    }
+
+    function error(err) {
+      // err can occur due to internet disconnectivity
+      console.log('err:', err.message)
+    }
+
     const interval = setInterval(() => {
       navigator.geolocation.getCurrentPosition(getMyPosition, error)
-    }, 30000)
+    }, 3000)
 
     return () => {
       clearInterval(interval)
     }
   }, [])
+
+  // useEffect(() => {
+  //   const watcherId = navigator.geolocation.watchPosition(watchMyposition, err, { maximumAge: 0, timeout: 5000 })
+
+  //   function watchMyposition(position) {
+  //     setLat(position.coords.latitude)
+  //     setLong(position.coords.longitude)
+  //     console.log('position:', position)
+  //   }
+
+  //   function err() {
+  //     console.log('unable to obtain location please reload page and try')
+  //   }
+
+  //   return () => {
+  //     navigator.geolocation.clearWatch(watcherId)
+  //   }
+  // }, [])
 
   return (
     <div>
