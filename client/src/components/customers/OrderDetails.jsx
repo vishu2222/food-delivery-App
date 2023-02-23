@@ -3,7 +3,8 @@ import { useLocation } from 'react-router-dom'
 import requests from './customerRequests.js'
 import { formatTime } from '../utlities/formateTime.js'
 import { io } from 'socket.io-client'
-// import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { updatePartnerLocation } from '../../store/actions.js'
 import Map from './Map.jsx'
 
 const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
@@ -19,7 +20,7 @@ function OrderDetails() {
   const [restaurantName, setRestaurantName] = useState('')
   const [orderStatus, setOrderStatus] = useState('awaiting restaurants confirmation')
   const [totalPrice, setTotalPrice] = useState('')
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     ;(async () => {
@@ -50,11 +51,22 @@ function OrderDetails() {
       setOrderStatus(orderStatus)
     })
 
+    socket.on('partnerLocationUpdate', (location) => {
+      dispatch(updatePartnerLocation({ lat: location.lat, lng: location.long }))
+      console.log(location)
+    })
+
+    socket.on('disconnect', () => {
+      console.log('socket disconnected')
+    })
+
     return () => {
       socket.off('customer-update')
       socket.off('connect')
+      socket.off('partnerLocationUpdate')
+      socket.off('disconnect')
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <div>
@@ -74,9 +86,7 @@ function OrderDetails() {
       ))}
       <p>Delivary person: {partnerName}</p>
       <p>Phone: {phone}</p>
-      <div>
-        <Map />
-      </div>
+      <div>{/* <Map /> */}</div>
     </div>
   )
 }
