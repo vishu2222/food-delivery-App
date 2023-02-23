@@ -1,3 +1,7 @@
-export const partnerLocations = {
-  // partnerId: {lat, long}
+export const assignedPartnerLocations = {
+  //
+}
+
+export const unassignedPartnerLocations = {
+  //
 }
