@@ -44,12 +44,18 @@ export function notifyPartner(notification) {
   try {
     const io = socket.get()
     if (notification.type === 'pickup') {
-      io.to(unassignedPartnerMap[notification.partnerId]).emit('partner-update', {
+      const partnerId = notification.partnerId
+      io.to(unassignedPartnerMap[partnerId]).emit('partner-update', {
         status: notification.status,
         ...notification.restaurant,
         order_id: notification.orderId,
         total_price: notification.orderAmount
       })
+
+      const socketId = unassignedPartnerMap[partnerId]
+
+      delete unassignedPartnerMap[partnerId]
+      assignedPartnerMap[partnerId] = socketId
     }
   } catch (err) {
     //
@@ -61,6 +67,13 @@ export function notifyCustomer(notification) {
     const io = socket.get()
     if (notification.type === 'update') {
       io.to(customerMap[notification.customerId]).emit('customer-update', notification.orderStatus)
+    }
+
+    if (notification.orderStatus === 'delivered') {
+      const partnerId = notification.partnerId
+      const socketId = assignedPartnerMap[partnerId]
+      delete assignedPartnerMap[partnerId]
+      unassignedPartnerMap[partnerId] = socketId
     }
   } catch (err) {
     //
