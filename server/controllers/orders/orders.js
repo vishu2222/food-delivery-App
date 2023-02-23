@@ -46,7 +46,7 @@ export async function createOrder(req, res) {
   } catch (err) {
     if (err.code === '23503' && err.table === 'orders') {
       // in db fk constraint gets voilated when invalid address is given
-      // move to model
+      // need to move this to  model
       return res.status().json({ msg: 'given address id not found' })
     }
 
@@ -162,6 +162,7 @@ async function findNearestDeliveryPartner(restaurantDetails) {
 
 async function updatePartnersConfirmation(orderId, req, res) {
   try {
+    const partnerId = req.partnerId
     const orderStatusUpdate = req.body.status
 
     const orderDetails = await getOrder(orderId)
@@ -173,9 +174,7 @@ async function updatePartnersConfirmation(orderId, req, res) {
     await updateDelivery(orderId, orderStatusUpdate)
     res.json({ msg: orderStatusUpdate })
 
-    // if orderStatusUpdate === 'delivered' the delete the partner key in assignedPartnerMap and assignedPartnerLocations
-
-    notifyCustomer({ type: 'update', orderStatus: orderStatusUpdate, customerId: orderDetails.customer_id })
+    notifyCustomer({ type: 'update', orderStatus: orderStatusUpdate, customerId: orderDetails.customer_id, partnerId })
     if (orderStatusUpdate === 'awaiting delivery') {
       notifyRestaurant({
         type: 'update',
