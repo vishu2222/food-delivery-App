@@ -18,7 +18,15 @@ export async function getOrder(orderId) {
   return res.rows[0]
 }
 
-// console.log(await getOrder(43))
+export async function isPartnerAssigned(partnerId) {
+  const query = `select order_id, customer_id, address_id, restaurant_id, partner_id 
+                 from orders 
+                 where partner_id=$1 and status in ('awaiting pickup', 'awaiting delivery');`
+  const params = [partnerId]
+  const res = await pool.query(query, params)
+  if (res.rowCount < 1) return [false, null]
+  return [true, res.rows[0]]
+}
 
 export async function getOrderId(customerId, restaurantId) {
   const query = `SELECT order_id
