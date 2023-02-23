@@ -1,7 +1,8 @@
 import { Server } from 'socket.io'
-import { restaurantMap, partnerMap, customerMap } from './models/socketMap.js'
+import { restaurantMap, customerMap, assignedPartnerMap, unassignedPartnerMap } from './models/socketMap.js'
+import { assignedPartnerLocations, unassignedPartnerLocations } from './models/partnerLiveLocations.js'
 import { getSessionUserDetails } from './models/sessions.js'
-import { partnerLocations } from './models/partnerLiveLocations.js'
+import { isPartnerAssigned } from './models/orders.js'
 
 let io
 export default {
@@ -24,8 +25,18 @@ export default {
         }
 
         if (session.user_type === 'delivery_partner') {
-          partnerMap[session.partner_id] = socket.id
           socket.partnerId = session.partner_id
+
+          const [assigned, order] = await isPartnerAssigned(session.partner_id)
+
+          if (assigned) {
+            assignedPartnerMap[session.partner_id] = socket.id
+            socket.assigned = true
+            socket.restaurantId = order.restaurant_id
+            socket.customerId = order.customer_id
+          } else {
+            unassignedPartnerMap[session.partner_id] = socket.id
+          }
         }
 
         next()
@@ -36,7 +47,17 @@ export default {
 
     io.on('connection', (socket) => {
       socket.on('partnerLiveLocation', (location) => {
-        partnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
+        // console.log(unassignedPartnerLocations)
+        // console.log(assignedPartnerLocations)
+        if (!socket.assigned) {
+          unassignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
+        } else {
+          assignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
+          const customerId = socket.customerId
+          const restaurantId = socket.restaurantId
+          socket.to(customerMap[customerId]).emit('partnerLocationUpdate', location)
+          socket.to(restaurantMap[restaurantId]).emit('partnerLocationUpdate', location)
+        }
       })
     })
   },
