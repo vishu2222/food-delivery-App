@@ -2,7 +2,7 @@ const initialState = {
   cart: [],
   restaurantId: null,
   delivaryAddress: {},
-  partnerLocation: { lat: null, long: null }
+  partnerLocation: { lat: null, lng: null }
 }
 
 const reducer = (state = initialState, action) => {
