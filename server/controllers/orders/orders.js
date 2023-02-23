@@ -6,7 +6,7 @@ import { notifyPartner, notifyRestaurant, notifyCustomer } from './notifications
 import { validateOrderUpdate } from './validateOrderUpdate.js'
 import { addOrderItemNames } from './addOrderItemNames.js'
 import { sendNewOrderNotification } from './notifications.js'
-import { partnerLocations } from '../../models/partnerLiveLocations.js'
+import { unassignedPartnerLocations } from '../../models/partnerLiveLocations.js'
 import { getDistance } from 'geolib'
 
 // create order example cart =  {"restaurantId":1, "addressId":1, "items":{"1":2, "2":3}}
@@ -140,14 +140,17 @@ async function assignDeliveryPartner(restaurantId, orderId, customerId) {
 }
 
 async function findNearestDeliveryPartner(restaurantDetails) {
-  console.log('partnerLocations:', partnerLocations)
   const lat = restaurantDetails.lat
   const long = restaurantDetails.long
   let partnerId
   let max = Infinity
 
-  for (let key of Object.keys(partnerLocations)) {
-    let distance = getDistance(partnerLocations[key], { latitude: lat, longitude: long })
+  if (Object.keys(unassignedPartnerLocations).length === 0) {
+    // need to handle the case where no partners are available
+  }
+
+  for (let key of Object.keys(unassignedPartnerLocations)) {
+    let distance = getDistance(unassignedPartnerLocations[key], { latitude: lat, longitude: long })
     if (distance < max) {
       max = distance
       partnerId = key
@@ -169,6 +172,8 @@ async function updatePartnersConfirmation(orderId, req, res) {
 
     await updateDelivery(orderId, orderStatusUpdate)
     res.json({ msg: orderStatusUpdate })
+
+    // if orderStatusUpdate === 'delivered' the delete the partner key in assignedPartnerMap and assignedPartnerLocations
 
     notifyCustomer({ type: 'update', orderStatus: orderStatusUpdate, customerId: orderDetails.customer_id })
     if (orderStatusUpdate === 'awaiting delivery') {

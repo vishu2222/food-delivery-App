@@ -1,5 +1,5 @@
 import socket from '../../sockets.js'
-import { restaurantMap, partnerMap, customerMap } from '../../models/socketMap.js'
+import { restaurantMap, assignedPartnerMap, unassignedPartnerMap, customerMap } from '../../models/socketMap.js'
 import { addOrderItemNames } from './addOrderItemNames.js'
 
 export async function sendNewOrderNotification(cartItems, order_time, totalAmount, restaurantId, order_id) {
@@ -44,7 +44,7 @@ export function notifyPartner(notification) {
   try {
     const io = socket.get()
     if (notification.type === 'pickup') {
-      io.to(partnerMap[notification.partnerId]).emit('partner-update', {
+      io.to(unassignedPartnerMap[notification.partnerId]).emit('partner-update', {
         status: notification.status,
         ...notification.restaurant,
         order_id: notification.orderId,
