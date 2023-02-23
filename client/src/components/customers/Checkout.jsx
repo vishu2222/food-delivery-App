@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 function Checkout() {
   const [displayMsg, setDisplayMsg] = useState('')
 
-  const state = useSelector((state) => state)
+  // const state = useSelector((state) => state)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -22,14 +22,17 @@ function Checkout() {
     return procedCart
   }
 
+  const state = useSelector((state) => state)
+
   async function createOrder() {
     setDisplayMsg('processing order...')
 
-    const addressId = state.delivaryAddress.address_id
-    if (addressId === null) {
+    if (state.delivaryAddress === undefined) {
       setDisplayMsg('please select a delivary address')
       return
     }
+
+    const addressId = state.delivaryAddress.address_id
 
     const restaurantId = state.restaurantId
     if (restaurantId === null) {
