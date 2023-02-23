@@ -6,6 +6,10 @@ export const customerMap = {
   // customerId: socketId
 }
 
-export const partnerMap = {
-  // partnerId: socketId
+export const assignedPartnerMap = {
+  //
+}
+
+export const unassignedPartnerMap = {
+  //
 }
