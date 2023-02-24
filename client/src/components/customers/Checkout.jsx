@@ -9,17 +9,15 @@ import { useNavigate } from 'react-router-dom'
 function Checkout() {
   const [displayMsg, setDisplayMsg] = useState('')
 
-  // const state = useSelector((state) => state)
-
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   function processCart(cart) {
-    const procedCart = { items: {} }
+    const processedCart = { items: {} }
     cart.forEach((item) => {
-      procedCart.items[item.item_id] = item.quantity
+      processedCart.items[item.item_id] = item.quantity
     })
-    return procedCart
+    return processedCart
   }
 
   const state = useSelector((state) => state)
@@ -33,8 +31,8 @@ function Checkout() {
     }
 
     const addressId = state.delivaryAddress.address_id
+    const restaurantId = state.restaurant.restaurant_id
 
-    const restaurantId = state.restaurantId
     if (restaurantId === null) {
       setDisplayMsg('add items to cart from a restaurant')
     }
