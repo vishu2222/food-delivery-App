@@ -25,6 +25,8 @@ function ShowRestaurant() {
         return
       }
 
+      console.log('restaurant:', response)
+
       setRestaurant(response.restaurant)
       setMenu(response.menu)
     })()
@@ -54,7 +56,7 @@ function ShowRestaurant() {
       <h2>Menu</h2>
       <div id='restaurantMenu'>
         {menu.map((item, index) => (
-          <MenuItem item={item} restaurantId={restaurantId} key={index} />
+          <MenuItem item={item} restaurant={restaurant} key={index} />
         ))}
       </div>
 
