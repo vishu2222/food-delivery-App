@@ -5,10 +5,28 @@ export const updatePartnerLocation = (position) => {
   }
 }
 
-export const setRestaurantId = (restaurantId) => {
+export const clearRestaurant = () => {
+  return {
+    type: 'clear/restaurant'
+  }
+}
+
+export const clearPartnerLocation = () => {
+  return {
+    type: 'clear/partnerLocation'
+  }
+}
+
+export const clearDeliveryAddress = () => {
+  return {
+    type: 'clear/address'
+  }
+}
+
+export const setRestaurant = (restaurant) => {
   return {
     type: 'add/restaurant',
-    payload: restaurantId
+    payload: restaurant
   }
 }
 
@@ -52,13 +70,6 @@ export const clearCart = () => {
     type: 'cart/clearCart'
   }
 }
-
-// export const setDelivaryAddress = (addressId) => {
-//   return {
-//     type: 'delivary/address',
-//     payload: addressId
-//   }
-// }
 
 export const setDelivaryAddress = (address) => {
   return {
