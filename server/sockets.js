@@ -26,12 +26,10 @@ export default {
 
         if (session.user_type === 'delivery_partner') {
           socket.partnerId = session.partner_id
-
           const [assigned, order] = await isPartnerAssigned(session.partner_id)
 
           if (assigned) {
             assignedPartnerMap[session.partner_id] = socket.id
-            socket.assigned = true
             socket.restaurantId = order.restaurant_id
             socket.customerId = order.customer_id
           } else {
@@ -46,15 +44,25 @@ export default {
     })
 
     io.on('connection', (socket) => {
-      socket.on('partnerLiveLocation', (location) => {
-        // console.log(unassignedPartnerLocations)
-        // console.log(assignedPartnerLocations)
-        if (!socket.assigned) {
+      socket.on('partnerLiveLocation', async (location) => {
+        // console.log('assignedPartnerMap:', assignedPartnerMap)
+        // console.log('unassignedPartnerMap:', unassignedPartnerMap)
+
+        if (unassignedPartnerMap[socket.partnerId]) {
+          // i.e, is socket-partner is not assigned an order
+
           unassignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
         } else {
           assignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
           const customerId = socket.customerId
           const restaurantId = socket.restaurantId
+
+          if (customerId === undefined || restaurantId === undefined) {
+            const [assigned, order] = await isPartnerAssigned(socket.partnerId)
+            socket.restaurantId = order.restaurant_id
+            socket.customerId = order.customer_id
+          }
+
           socket.to(customerMap[customerId]).emit('partnerLocationUpdate', location)
           socket.to(restaurantMap[restaurantId]).emit('partnerLocationUpdate', location)
         }
@@ -70,15 +78,5 @@ export default {
   }
 }
 
-// socket.userId = session.user_id
-// socket.userRole = session.user_type
-//
-//
-// socket.partnerId = session.partner_id
-// socket.sessionId = sessionId
-
-// count++
-// socket.on('disconnect', () => {
-//   count--
-// })
-// console.log('socket count', count)
+// console.log('assignedPartnerMap:', assignedPartnerMap)
+// console.log('unassignedPartnerMap:', unassignedPartnerMap)
