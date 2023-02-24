@@ -1,6 +1,6 @@
 const initialState = {
   cart: [],
-  restaurantId: null,
+  restaurant: {},
   delivaryAddress: {},
   partnerLocation: { lat: null, lng: null }
 }
@@ -10,14 +10,20 @@ const reducer = (state = initialState, action) => {
     case 'partnerLocationUpdate':
       return { ...state, partnerLocation: action.payload }
 
+    case 'clear/partnerLocation':
+      return { ...state, partnerLocation: { lat: null, lng: null } }
+
+    case 'clear/restaurant':
+      return { ...state, restaurant: {} }
+
+    case 'clear/address':
+      return { ...state, delivaryAddress: {} }
+
     case 'add/restaurant':
-      return { ...state, restaurantId: action.payload }
+      return { ...state, restaurant: action.payload }
 
     case 'delivary/address':
       return { ...state, delivaryAddress: action.payload }
-
-    case 'clear/address':
-      return { ...state, delivaryAddressId: null }
 
     case 'cart/addItem':
       return { ...state, cart: [...state.cart, { ...action.payload, quantity: 1 }] }
