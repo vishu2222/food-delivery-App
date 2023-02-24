@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addToCart, incrementCartItem, decrementCartItem, removeCartItem, setRestaurantId } from '../../store/actions'
+import { addToCart, incrementCartItem, decrementCartItem, removeCartItem, setRestaurant } from '../../store/actions'
 
-function MenuItem({ item, restaurantId }) {
+function MenuItem({ item, restaurant }) {
   const dispatch = useDispatch()
   const [quantity, setQuantity] = useState(0)
   const itemId = item.item_id
-
-  const payload = { ...item }
 
   const cartitem = useSelector((state) => state.cart).find((item) => item.item_id === itemId)
 
@@ -21,19 +19,19 @@ function MenuItem({ item, restaurantId }) {
 
   function increment() {
     if (quantity === 0) {
-      dispatch(setRestaurantId(restaurantId))
-      dispatch(addToCart(payload))
+      dispatch(setRestaurant(restaurant))
+      dispatch(addToCart({ ...item }))
       return
     }
-    dispatch(incrementCartItem(payload))
+    dispatch(incrementCartItem({ ...item }))
   }
 
   function decrement() {
     if (quantity > 1) {
-      dispatch(decrementCartItem(payload))
+      dispatch(decrementCartItem({ ...item }))
       return
     }
-    dispatch(removeCartItem(payload))
+    dispatch(removeCartItem({ ...item }))
   }
 
   return (
