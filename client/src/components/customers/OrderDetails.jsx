@@ -4,12 +4,18 @@ import requests from './customerRequests.js'
 import { formatTime } from '../utlities/formateTime.js'
 import { io } from 'socket.io-client'
 import { useDispatch } from 'react-redux'
-import { updatePartnerLocation } from '../../store/actions.js'
+import {
+  updatePartnerLocation,
+  clearDeliveryAddress,
+  clearRestaurant,
+  clearPartnerLocation
+} from '../../store/actions.js'
 import Map from './Map.jsx'
 
 const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
 
 function OrderDetails() {
+  const [showMap, setShowMap] = useState(true)
   const [displayMsg, setDisplayMsg] = useState('')
   const location = useLocation()
   const orderId = Number(location.pathname.split('order-details/')[1])
@@ -21,6 +27,9 @@ function OrderDetails() {
   const [orderStatus, setOrderStatus] = useState('awaiting restaurants confirmation')
   const [totalPrice, setTotalPrice] = useState('')
   const dispatch = useDispatch()
+
+  // const state = useSelector((state) => state)
+  // console.log('state>:', state)
 
   useEffect(() => {
     ;(async () => {
@@ -42,6 +51,16 @@ function OrderDetails() {
   }, [orderId])
 
   useEffect(() => {
+    if (orderStatus === 'delivered') {
+      // need to disconnect socket
+      dispatch(clearRestaurant())
+      dispatch(clearDeliveryAddress())
+      dispatch(clearPartnerLocation())
+      setShowMap(false)
+    }
+  }, [orderStatus, dispatch])
+
+  useEffect(() => {
     socket.connect()
     socket.on('connect', () => {
       console.log('socket connected')
@@ -53,7 +72,6 @@ function OrderDetails() {
 
     socket.on('partnerLocationUpdate', (location) => {
       dispatch(updatePartnerLocation({ lat: location.lat, lng: location.long }))
-      console.log(location)
     })
 
     socket.on('disconnect', () => {
@@ -86,7 +104,7 @@ function OrderDetails() {
       ))}
       <p>Delivary person: {partnerName}</p>
       <p>Phone: {phone}</p>
-      <div>{/* <Map /> */}</div>
+      <div>{showMap && <Map />}</div>
     </div>
   )
 }
