@@ -11,17 +11,24 @@ const pool = new Pool({
 })
 
 export async function getRestaruants() {
-  const res = await pool.query(`SELECT restaurant_id, restaurant_name, phone, address, city, start_time, close_time, img 
-                                FROM restaurant`)
+  const res =
+    await pool.query(`SELECT restaurant_id, restaurant_name, phone, address, city, start_time, close_time, img 
+                      FROM restaurant`)
   return res.rows
 }
 
 export async function getMenu(restaurantId) {
-  const res = await pool.query('SELECT item_id, item_name, price, description, category, availability, img FROM food_item  WHERE restaurant_id = $1;', [restaurantId])
+  const res = await pool.query(
+    'SELECT item_id, item_name, price, description, category, availability, img FROM food_item  WHERE restaurant_id = $1;',
+    [restaurantId]
+  )
   return res.rows
 }
 
 export async function getRestaruant(restaurantId) {
-  const res = await pool.query('SELECT restaurant_id, restaurant_name, phone, lat,long, address, city, start_time, close_time, img FROM restaurant WHERE restaurant_id=$1;', [restaurantId])
+  const res = await pool.query(
+    'SELECT restaurant_id, restaurant_name, phone, lat,long, address, city, start_time, close_time, img FROM restaurant WHERE restaurant_id=$1;',
+    [restaurantId]
+  )
   return res.rows
 }
