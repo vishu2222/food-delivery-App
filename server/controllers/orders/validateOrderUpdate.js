@@ -1,6 +1,7 @@
 export function validateOrderUpdate(orderStatusUpdate, currentStatus, updatedBy, req, res) {
   //
   if (updatedBy === 'restaurant') {
+    // only two update options for restaurant
     if (!['restaurant rejected', 'searching for delivery partner'].includes(orderStatusUpdate)) {
       res.status(400).json({ err: `invalid order status update` })
       return false
@@ -15,7 +16,7 @@ export function validateOrderUpdate(orderStatusUpdate, currentStatus, updatedBy,
     return true
   }
 
-  // partner has only two options
+  // Only two update options for partner
   if (updatedBy === 'partner') {
     if (!['awaiting delivery', 'delivered'].includes(orderStatusUpdate)) {
       res.status(400).json({ err: 'invalid order status update' })

@@ -13,6 +13,7 @@ export async function getAllOrders() {
 }
 
 export async function updateOrder(orderId, status) {
+  // console.log(orderId)
   const res = await fetch(`${baseUrl}/orders/${orderId}`, {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',

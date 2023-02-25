@@ -32,7 +32,7 @@ export async function createSession(sessionId, userId) {
 }
 
 export async function getSessionUserDetails(sessionId) {
-  //   const query = `select * from sessions where session_id = $1`
+  //  need to refactor the query to reduce multiple joins
   const query = `with cte as 
                          (
 	                        select s.session_id, s.user_id, s.created_at, u.user_name, u.user_type from sessions s

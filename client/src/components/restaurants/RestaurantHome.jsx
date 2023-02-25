@@ -85,4 +85,3 @@ function RestaurantHome() {
 }
 
 export default RestaurantHome
-// key={order.status + index}

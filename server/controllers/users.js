@@ -28,6 +28,8 @@ async function addNewCustomer(req, res) {
     const salt = await bcrypt.genSalt()
     const hashedPwd = await bcrypt.hash(password, salt)
 
+    // console.log('credentials:', credentials)
+
     await registerCustomer(userName, userType, hashedPwd, customerName, phone, email)
     return res.sendStatus(201)
   } catch (err) {

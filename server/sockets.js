@@ -25,6 +25,7 @@ export default {
         }
 
         if (session.user_type === 'delivery_partner') {
+          //switch
           socket.partnerId = session.partner_id
           const [assigned, order] = await isPartnerAssigned(session.partner_id)
 
@@ -53,6 +54,7 @@ export default {
 
           unassignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
         } else {
+          // saving assigned partnerlocations may not be usefull
           assignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
           const customerId = socket.customerId
           const restaurantId = socket.restaurantId

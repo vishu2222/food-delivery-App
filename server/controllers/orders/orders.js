@@ -110,6 +110,8 @@ async function assignDeliveryPartner(restaurantId, orderId, customerId) {
 
     const partnerId = await findNearestDeliveryPartner(restaurantDetails[0])
 
+    // need to handle if no partner is available
+
     await assignPartner(orderId, partnerId)
 
     const orderDetails = await getOrder(orderId)

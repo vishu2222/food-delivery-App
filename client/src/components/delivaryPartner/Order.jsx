@@ -10,14 +10,14 @@ function Order({ order, index }) {
 
   async function updateDelivary(statusUpdate) {
     const [responseStatus, orderStatus] = await updateOrder(orderId, statusUpdate)
+
     if (responseStatus !== 200) {
       //
+      console.log('responseStatus:', responseStatus)
       return
     }
     setStatus(orderStatus.msg)
   }
-
-  console.log('order', order)
 
   return (
     <div>

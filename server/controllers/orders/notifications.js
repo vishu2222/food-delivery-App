@@ -53,7 +53,6 @@ export function notifyPartner(notification) {
       })
 
       const socketId = unassignedPartnerMap[partnerId]
-
       delete unassignedPartnerMap[partnerId]
       assignedPartnerMap[partnerId] = socketId
     }
