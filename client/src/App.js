@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import Login from './components/Login.jsx'
+import Login from './components/Common/Login.jsx'
 import Register from './components/Common/Register'
 import Home from './components/Common/Home'
 
