@@ -13,7 +13,7 @@ import { router as addressRouter } from './routes/customer.js'
 const port = config.port
 const app = express()
 
-app.use(cors({ origin: 'http://localhost:3001', credentials: true }))
+app.use(cors({ origin: ['http://localhost:3001'], credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
 
