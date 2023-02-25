@@ -10,7 +10,7 @@ import {
   clearRestaurant,
   clearPartnerLocation
 } from '../../store/actions.js'
-import Map from './Map.jsx'
+import Map from '../Common/Map.jsx'
 
 const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
 
