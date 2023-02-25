@@ -56,7 +56,6 @@ create table customer_address(
 	constraint fk_customer_customer_address foreign key(customer_id) references customer(customer_id)
 );
 
--- insert into customer_address(city, customer_id) values('bangalore', 1);
 
 
 --delivery_partner
@@ -130,6 +129,16 @@ select * from customer_address;
 select * from orders;
 select * from delivery_partner;
 select * from sessions;
+
+
+
+
+
+
+
+
+
+
 
 
 
