@@ -33,7 +33,7 @@ function SavedAddresses() {
   useEffect(() => {
     const selectedAddress = addressess.find((address) => address.address_id === selectedAddressId)
     dispatch(setDelivaryAddress(selectedAddress))
-  }, [selectedAddressId, dispatch])
+  }, [selectedAddressId, dispatch, addressess])
 
   return (
     <div>
