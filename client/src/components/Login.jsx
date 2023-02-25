@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import requests from '../requests'
+import requests from './Common/requests'
 import { useNavigate } from 'react-router-dom'
 
 function Login() {

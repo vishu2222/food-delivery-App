@@ -2,8 +2,8 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import Login from './components/Login.jsx'
-import Register from './components/Register'
-import Home from './components/Home'
+import Register from './components/Common/Register'
+import Home from './components/Common/Home'
 
 import CustomerHome from './components/customers/CustomerHome'
 import CustomerRegistration from './components/customers/CustomerRegistration'
