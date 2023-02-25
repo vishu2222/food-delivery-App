@@ -16,6 +16,7 @@ const center = {
 
 function MyComponent() {
   // process.env.REACT_APP_MAPKEY
+
   const [partnerAssigned, setPartnerAssigned] = useState(false)
 
   const deliveryAddress = useSelector((state) => state.delivaryAddress)
@@ -29,7 +30,7 @@ function MyComponent() {
   console.log('partnerLocation:', partnerCenter)
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_MAPKEY
+    googleMapsApiKey: ''
   })
 
   useEffect(() => {
@@ -54,7 +55,6 @@ function MyComponent() {
       <Marker
         id='restaurant'
         position={restaurantCenter}
-        // label={'restaurant'}
         icon={{ url: restaurantIcon, scaledSize: new window.google.maps.Size(40, 40) }}></Marker>
       {partnerAssigned && (
         <Marker
