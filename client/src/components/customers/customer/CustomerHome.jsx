@@ -1,8 +1,7 @@
-import './styles/home.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getRestaurants } from './customerRequests'
+import { getRestaurants } from '../requests'
 
 function CustomerHome() {
   const navigate = useNavigate()

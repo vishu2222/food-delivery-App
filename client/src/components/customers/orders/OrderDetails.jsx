@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import requests from './customerRequests.js'
-import { formatTime } from '../utlities/formateTime.js'
+import requests from '../requests.js'
+import { formatTime } from '../../utlities/formateTime.js'
 import { io } from 'socket.io-client'
 import { useDispatch } from 'react-redux'
 import {
@@ -9,8 +9,8 @@ import {
   clearDeliveryAddress,
   clearRestaurant,
   clearPartnerLocation
-} from '../../store/actions.js'
-import Map from '../Common/Map.jsx'
+} from '../../../store/actions.js'
+import Map from '../../Common/Map.jsx'
 
 const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
 

@@ -1,9 +1,9 @@
 import Address from './Address'
-import { getCustomerAddress } from './customerRequests'
+import { getCustomerAddress } from '../requests'
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { setDelivaryAddress } from '../../store/actions'
+import { setDelivaryAddress } from '../../../store/actions'
 
 function SavedAddresses() {
   const [savedAddressExists, setSavedAddressExists] = useState(false)

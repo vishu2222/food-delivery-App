@@ -1,9 +1,10 @@
-import Cart from './Cart'
-import Addressess from './Addressess'
+import Cart from '../cart/Cart'
+import Addressess from '../address/Addressess'
+
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { clearCart } from '../../store/actions'
-import { placeOrder } from './customerRequests'
+import { clearCart } from '../../../store/actions'
+import { placeOrder } from '../requests'
 import { useNavigate } from 'react-router-dom'
 
 function Checkout() {

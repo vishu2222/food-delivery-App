@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import requests from './customerRequests'
+import requests from '../requests'
 import { useNavigate } from 'react-router-dom'
 
 function CustomerRegistration() {

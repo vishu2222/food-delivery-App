@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { getRestaurant } from './customerRequests'
+import { getRestaurant } from '../requests'
 import MenuItem from './MenuItem'
-import Cart from './Cart'
+import Cart from '../cart/Cart'
 import { useSelector } from 'react-redux'
 
 function ShowRestaurant() {
