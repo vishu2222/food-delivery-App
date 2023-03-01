@@ -4,6 +4,8 @@ import { getRestaurant } from '../requests'
 import MenuItem from './MenuItem'
 import Cart from '../cart/Cart'
 import { useSelector } from 'react-redux'
+import RestaurantCard from './RestaurantCard'
+import Nav from '../Nav'
 
 function ShowRestaurant() {
   const [restaurant, setRestaurant] = useState({})
@@ -41,28 +43,24 @@ function ShowRestaurant() {
   }
 
   return (
-    <div id='showRestaurantPage'>
+    <div id='showRestaurantPage' className=' bg-gray-200'>
       <h3>{displayMsg}</h3>
-      <div id='restaurant'>
-        <h3>{restaurant.restaurant_name}</h3>
-        <img src={restaurant.img} alt='img' />
-        <h3>address {restaurant.address}</h3>
-        <h3>city {restaurant.city}</h3>
-        <h3>start time {restaurant.start_time}</h3>
-        <h3>close time {restaurant.close_time}</h3>
-        <h3>Phone {restaurant.phone}</h3>
-      </div>
+      <Nav />
+      <div>
+        <RestaurantCard restaurant={restaurant} />
 
-      <h2>Menu</h2>
-      <div id='restaurantMenu'>
-        {menu.map((item, index) => (
-          <MenuItem item={item} restaurant={restaurant} key={index} />
-        ))}
-      </div>
+        <div id='items-and-cart' className='flex w-3/5 m-auto'>
+          <div id='restaurantMenu' className='py-1 flex flex-col'>
+            {menu.map((item, index) => (
+              <MenuItem item={item} restaurant={restaurant} key={index} />
+            ))}
+          </div>
 
-      <div id='cart'>
-        <Cart />
-        <button onClick={gotoCheckOut}>checkout</button>
+          <div id='cart'>
+            <Cart />
+            <button onClick={gotoCheckOut}>checkout</button>
+          </div>
+        </div>
       </div>
     </div>
   )
