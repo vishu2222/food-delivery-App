@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart, incrementCartItem, decrementCartItem, removeCartItem, setRestaurant } from '../../../store/actions'
+import MenuCard from './MenuCard'
 
 function MenuItem({ item, restaurant }) {
   const dispatch = useDispatch()
@@ -20,32 +21,23 @@ function MenuItem({ item, restaurant }) {
   function increment() {
     if (quantity === 0) {
       dispatch(setRestaurant(restaurant))
-      dispatch(addToCart({ ...item }))
+      dispatch(addToCart(item))
       return
     }
-    dispatch(incrementCartItem({ ...item }))
+
+    dispatch(incrementCartItem(item))
   }
 
   function decrement() {
     if (quantity > 1) {
-      dispatch(decrementCartItem({ ...item }))
+      dispatch(decrementCartItem(item))
       return
     }
-    dispatch(removeCartItem({ ...item }))
+
+    dispatch(removeCartItem(item))
   }
 
-  return (
-    <div className='menu-item'>
-      <img src={item.img} alt='img' />
-      <p>{item.item_name}</p>
-      <p>price: {item.price}</p>
-      <p>
-        <button onClick={decrement}>-</button>
-        {quantity || 'Add'}
-        <button onClick={increment}>+</button>
-      </p>
-    </div>
-  )
+  return <MenuCard item={item} decrement={decrement} increment={increment} quantity={quantity} />
 }
 
 export default MenuItem
