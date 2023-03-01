@@ -2,11 +2,19 @@ const initialState = {
   cart: [],
   restaurant: {},
   delivaryAddress: {},
-  partnerLocation: { lat: null, lng: null }
+  partnerLocation: { lat: null, lng: null },
+  userSigned: false,
+  userName: null
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'add/userName':
+      return { ...state, userName: action.payload }
+
+    case 'user/signedIn':
+      return { ...state, userSigned: action.payload }
+
     case 'partnerLocationUpdate':
       return { ...state, partnerLocation: action.payload }
 

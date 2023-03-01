@@ -1,3 +1,17 @@
+export const addUserName = (userName) => {
+  return {
+    type: 'add/userName',
+    payload: userName
+  }
+}
+
+export const isUserSignedIn = (value) => {
+  return {
+    type: 'user/signedIn',
+    payload: value
+  }
+}
+
 export const updatePartnerLocation = (position) => {
   return {
     type: 'partnerLocationUpdate',
