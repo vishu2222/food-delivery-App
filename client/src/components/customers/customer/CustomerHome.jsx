@@ -1,10 +1,10 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { getRestaurants } from '../requests'
+import Nav from '../Nav'
+import RestaurantCard from './RestaurantCard'
 
 function CustomerHome() {
-  const navigate = useNavigate()
   const [restaurants, setRestaurants] = useState([])
 
   useEffect(() => {
@@ -16,19 +16,19 @@ function CustomerHome() {
   }, [])
 
   return (
-    <div id='customerHome'>
-      <h2>Restaurants</h2>
-      <div id='customerHome-restaurants'>
-        {restaurants.map((restaurant, index) => {
-          return (
-            <div onClick={() => navigate(`/restaurant/${restaurant.restaurant_id}`)} key={index}>
-              <img src={restaurant.img} alt='img' />
-              <p>{restaurant.restaurant_name}</p>
-              <p> start time: {restaurant.start_time}</p>
-              <p> close time: {restaurant.close_time}</p>
-            </div>
-          )
-        })}
+    <div className=' bg-gray-100 '>
+      <Nav />
+      <div className=' w-4/5 m-auto'>
+        <div>
+          <h2 className=' text-2xl font-mono font-extrabold border-b-2 m-auto mb-6'>
+            {restaurants.length} Restaurants
+          </h2>
+        </div>
+        <div id='customerHome' className='grid grid-cols-5 gap-5 justify-center'>
+          {restaurants.map((restaurant, index) => (
+            <RestaurantCard restaurant={restaurant} key={index} />
+          ))}
+        </div>
       </div>
     </div>
   )
