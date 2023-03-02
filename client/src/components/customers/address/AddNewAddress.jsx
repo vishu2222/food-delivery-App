@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import requests from '../requests'
 import { useNavigate } from 'react-router-dom'
+import Nav from '../Nav'
+import { getAddressFromPosition } from '../requests'
 
 function AddNewAddress() {
   const [lat, setLat] = useState('')
@@ -10,6 +12,7 @@ function AddNewAddress() {
   const [location, setLocation] = useState('')
   const [city, setCity] = useState('')
   const [displayMsg, setDisplayMsg] = useState('')
+  const [address, setAddress] = useState('')
   const navigate = useNavigate()
 
   async function addNewAddress(addressType) {
@@ -46,34 +49,52 @@ function AddNewAddress() {
 
   navigator.geolocation.getCurrentPosition(getMyPosition, positionError)
 
+  useEffect(() => {
+    ;(async () => {
+      const response = await getAddressFromPosition(lat, long)
+      setAddress(response.results[0].formatted_address)
+    })()
+  }, [lat, long])
+
   return (
     <div>
-      <h2>Add address</h2>
-      <h3>{displayMsg}</h3>
-      {showCurrentLocation && (
-        <div>
-          <label>Add your current location</label>
-          <p>
-            lattitude: {lat} longitude: {long}
-          </p>
+      <Nav />
+      <div className=' bg-gray-200 flex flex-col items-center pb-80 '>
+        <h2 className='text-2xl font-extrabold pt-4'>Add address</h2>
+
+        <div className='flex flex-col p-4 w-2/3'>
+          <h3>{displayMsg}</h3>
+          {showCurrentLocation && (
+            <div className=' p-2 text-lg font-serif'>
+              <p className=' font-bold'>Add your current location?</p>
+              <p>
+                lattitude: {lat} longitude: {long}
+              </p>
+              <p>{address}</p>
+            </div>
+          )}
+          <button className='btn m-2 w-20' onClick={() => addNewAddress('current')}>
+            Add
+          </button>
         </div>
-      )}
-      <button onClick={() => addNewAddress('current')}>submit</button>
 
-      <h3>Add new Address</h3>
+        <div className='flex flex-col w-2/3'>
+          <h3 className=' text-xl font-bold'>Add new Address</h3>
 
-      <label> H.No: </label>
-      <input type='text' onChange={(e) => setHouseNo(e.target.value)} />
+          <p> H.No: </p>
+          <input className=' bg-blue-100 border-spacing-2' type='text' onChange={(e) => setHouseNo(e.target.value)} />
 
-      <label> location: </label>
-      <input type='text' onChange={(e) => setLocation(e.target.value)} />
+          <p> location: </p>
+          <input type='text' onChange={(e) => setLocation(e.target.value)} />
 
-      <label> city: </label>
-      <input type='text' onChange={(e) => setCity(e.target.value)} />
+          <p> city: </p>
+          <input type='text' onChange={(e) => setCity(e.target.value)} />
 
-      <button onClick={() => addNewAddress('new')}>submit</button>
-
-      <div></div>
+          <button className='btn w-20' onClick={() => addNewAddress('new')}>
+            submit
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
