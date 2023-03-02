@@ -11,8 +11,7 @@ const pool = new Pool({
 })
 
 export async function getRestaruants() {
-  const res =
-    await pool.query(`SELECT restaurant_id, restaurant_name, phone, address, city, start_time, close_time, img 
+  const res = await pool.query(`SELECT restaurant_id, restaurant_name, start_time, close_time, img 
                       FROM restaurant`)
   return res.rows
 }
