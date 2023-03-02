@@ -1,4 +1,4 @@
-import Cart from '../cart/Cart'
+// import Cart from '../cart/Cart'
 import Addressess from '../address/Addressess'
 
 import { useState } from 'react'
