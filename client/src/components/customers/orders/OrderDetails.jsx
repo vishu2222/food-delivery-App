@@ -4,6 +4,7 @@ import requests from '../requests.js'
 import { formatTime } from '../../utlities/formateTime.js'
 import { io } from 'socket.io-client'
 import { useDispatch } from 'react-redux'
+import Nav from '../Nav.jsx'
 import {
   updatePartnerLocation,
   clearDeliveryAddress,
@@ -88,23 +89,36 @@ function OrderDetails() {
 
   return (
     <div>
-      <h2>OrderDetails</h2>
+      <Nav />
+      <div className=' bg-slate-200 pb-32'>
+        <p className=' font-extrabold text-center text-3xl p-4'>Order details</p>
+        <div className=' flex justify-center '>
+          <div id='orderDetails' className=' p-4 px-10 text-lg font-serif font-medium bg-slate-300 mr-8 '>
+            <p>{displayMsg}</p>
+            <p className=' p-1 text-xl font-semibold'>Order id: {orderId}</p>
+            <p className=' p-1'>Order time: {orderTime}</p>
+            <p className=' p-1'>Price: ₹{totalPrice}</p>
+            <p className=' p-1'>Status: {orderStatus}</p>
+            <p className=' p-1'>Restaurant: {restaurantName}</p>
+            <p className=' p-1 text-xl font-semibold'>Order Items</p>
 
-      <p>{displayMsg}</p>
-      <p>Id: {orderId}</p>
-      <p>Order time: {orderTime}</p>
-      <p>Price: ₹{totalPrice}</p>
-      <p>Status: {orderStatus}</p>
-      <p>Restaurant: {restaurantName}</p>
-      <p>Items</p>
-      {orderItems.map((item, index) => (
-        <p key={index}>
-          {item.item_name}, quantity: {item.quantity}
-        </p>
-      ))}
-      <p>Delivary person: {partnerName}</p>
-      <p>Phone: {phone}</p>
-      <div>{showMap && <Map />}</div>
+            {orderItems.map((item, index) => (
+              <p key={index}>
+                {item.item_name}, quantity: {item.quantity}
+              </p>
+            ))}
+
+            <p className='text-xl font-semibold'>Delivary person: {partnerName}</p>
+            <p>Phone: {phone}</p>
+          </div>
+
+          {showMap && (
+            <div className=' p-4 border border-orange-900'>
+              <Map />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

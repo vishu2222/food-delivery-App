@@ -4,19 +4,20 @@ import { getAllOrders } from './requests/restaurantRequests'
 import Order from './Order'
 import { useNavigate } from 'react-router-dom'
 import { formatTime } from '../utlities/formateTime'
-// import { useSelector } from 'react-redux'
+import { useToast } from '@chakra-ui/react'
 
 const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
 
 function RestaurantHome() {
   const [orders, setOrders] = useState([])
   const navigate = useNavigate()
-  // const userType = useSelector((state) => state.userType)
 
   useEffect(() => {
     ;(async () => {
       let [status, ordersList] = await getAllOrders()
-      if (status === 401) {
+      console.log('status', status)
+      if (status !== 200) {
+        console.log('status', status)
         navigate('/login')
         return
       }
@@ -43,8 +44,6 @@ function RestaurantHome() {
     setOrders(updatedOrders)
   }
 
-  // console.log('ordersState:', orders)
-
   useEffect(() => {
     socket.connect()
 
@@ -69,17 +68,17 @@ function RestaurantHome() {
   }, [orders])
 
   return (
-    <div>
-      <h1>Restaurant Home</h1>
-      <h2>Orders</h2>
-      {orders.map((order, index) => {
-        return (
-          <div key={index}>
-            {/* can key be same for eachChild or unique? if unique why i get no error? */}
-            <Order order={order} index={index} key={order.status + index} />
-          </div>
-        )
-      })}
+    <div className='flex flex-col items-center p-4 h-screen bg-slate-400'>
+      <h2 className='text-b text-3xl font-extrabold'>ORDERS</h2>
+      <div className=' bg-slate-100'>
+        {orders.map((order, index) => {
+          return (
+            <div key={index}>
+              <Order order={order} index={index} key={order.status + index} />
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

@@ -1,10 +1,12 @@
 import React from 'react'
 
 function CartItem({ item }) {
+  console.log('item:', item)
   return (
-    <div>
-      <strong>{item.item_name} quantity: </strong>
-      {item.quantity} price: ₹{item.quantity * item.price}
+    <div className='flex justify-between '>
+      <p className=' p-4'>{item.item_name} </p>
+      <p className=' p-4'>{item.quantity} </p>
+      <p className=' p-4'>₹{item.quantity * item.price}</p>
     </div>
   )
 }

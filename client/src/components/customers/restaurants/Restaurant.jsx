@@ -50,15 +50,17 @@ function ShowRestaurant() {
         <RestaurantCard restaurant={restaurant} />
 
         <div id='items-and-cart' className='flex w-3/5 m-auto'>
-          <div id='restaurantMenu' className='py-1 flex flex-col'>
+          <div id='restaurantMenu' className='py-1 flex flex-col w-3/4'>
             {menu.map((item, index) => (
               <MenuItem item={item} restaurant={restaurant} key={index} />
             ))}
           </div>
 
-          <div id='cart'>
+          <div id='cart' className='p-5 sticky top-1/2  h-fit bg-slate-300 flex flex-col'>
             <Cart />
-            <button onClick={gotoCheckOut}>checkout</button>
+            <button className='p-2 bg-black text-white font-extrabold' onClick={gotoCheckOut}>
+              checkout
+            </button>
           </div>
         </div>
       </div>

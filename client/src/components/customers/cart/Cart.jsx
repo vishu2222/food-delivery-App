@@ -8,14 +8,13 @@ function Cart() {
   const total = cart.reduce((sum, item) => sum + item.quantity * item.price, 0)
 
   return (
-    <div id='cart'>
-      <h4>Cart</h4>
+    <div id='cart' className=' font-serif p-2'>
+      <p className=' text-3xl font-extrabold'>Cart </p>
       {cart.map((item, index) => {
         return <CartItem key={index} item={item} />
       })}
-      <p>
-        <strong>Total:</strong> ₹{total}
-      </p>
+
+      <p className=' p-4'>Total: ₹{total}</p>
     </div>
   )
 }

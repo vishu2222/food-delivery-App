@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { clearCart } from '../../../store/actions'
 import { placeOrder } from '../requests'
 import { useNavigate } from 'react-router-dom'
+import Nav from '../Nav'
 
 function Checkout() {
   const [displayMsg, setDisplayMsg] = useState('')
@@ -53,10 +54,20 @@ function Checkout() {
 
   return (
     <div>
-      <Cart />
-      <Addressess />
-      <button onClick={createOrder}>place order</button>
-      <h3>{displayMsg}</h3>
+      <Nav />
+
+      <div className=' p-8 bg-black sticky top-0'></div>
+
+      <div id='checkout' className='flex flex-col items-center  bg-slate-300 h-screen'>
+        <Addressess />
+        <div id='cart' className='p-5 flex flex-col w-1/6 h-1/12'>
+          {/* <Cart /> */}
+        </div>
+        <button className=' text-white font-serif bg-gray-600 rounded-full cursor-pointer p-2' onClick={createOrder}>
+          place order
+        </button>
+        <p className=' text-red-400 p-2'>{displayMsg}</p>
+      </div>
     </div>
   )
 }

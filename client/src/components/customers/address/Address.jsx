@@ -15,15 +15,16 @@ function Address({ address, index, setSelectedAddressId, selectedAddressId }) {
   }
 
   return (
-    <div>
-      <p>
-        <input
-          type='checkbox'
-          checked={selectedAddressId === address.address_id}
-          onChange={(e) => {
-            setAddress(address, e.target.checked)
-          }}
-        />
+    <div className='flex font-serif '>
+      <input
+        className=' m-2'
+        type='checkbox'
+        checked={selectedAddressId === address.address_id}
+        onChange={(e) => {
+          setAddress(address, e.target.checked)
+        }}
+      />
+      <p className='p-1 text-xl'>
         {index + 1}. city: {city}. H.No: {hno}. Locality: {locality}
       </p>
       <p>{displayMsg}</p>

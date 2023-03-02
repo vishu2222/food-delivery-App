@@ -3,12 +3,14 @@ import { BiFoodTag } from 'react-icons/bi'
 
 function MenuCard({ item, increment, decrement, quantity }) {
   let veg
+
   if (item.category === 'veg') {
     veg = true
   }
+
   return (
     <div className='flex m-1'>
-      <div className='flex flex-col w-1/2'>
+      <div className='flex flex-col w-3/4'>
         {veg ? <BiFoodTag className=' text-green-800 w-5 h-5' /> : <BiFoodTag className=' text-red-800 w-5 h-5' />}
 
         <p className=' text-lg p-2 font-bold'>{item.item_name}</p>
@@ -16,13 +18,13 @@ function MenuCard({ item, increment, decrement, quantity }) {
         <p className='p-2 font-extralight text-gray-500'>{item.description}</p>
       </div>
 
-      <div className=''>
+      <div className=' p-8 bg-slate-200'>
         <img src={item.img} alt='img' />
-        <p>
+        <div className=' bg-slate-100 flex justify-evenly text-green-600 font-bold'>
           <button onClick={decrement}>-</button>
           {quantity || 'Add'}
           <button onClick={increment}>+</button>
-        </p>
+        </div>
       </div>
     </div>
   )

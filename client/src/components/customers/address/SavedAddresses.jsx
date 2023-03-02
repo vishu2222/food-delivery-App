@@ -36,10 +36,10 @@ function SavedAddresses() {
   }, [selectedAddressId, dispatch, addressess])
 
   return (
-    <div>
+    <div className=' p-2 mt-2'>
       {savedAddressExists && (
         <div id='saved-addressess'>
-          <h4>select from saved addresses</h4>
+          <p className=' font-bold text-2xl'>select from saved addresses</p>
           {addressess.map((address, index) => (
             <div key={index}>
               <Address

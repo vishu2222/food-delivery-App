@@ -2,7 +2,7 @@ import React from 'react'
 
 function RestaurantCard({ restaurant }) {
   return (
-    <div id='restaurantCard' className='flex bg-black justify-center'>
+    <div id='restaurantCard' className='flex bg-black justify-center sticky top-0'>
       <img src={restaurant.img} alt='' className=' px-4 py-10  h-60 w-60' />
 
       <div className=' text-white flex flex-col p-4 '>

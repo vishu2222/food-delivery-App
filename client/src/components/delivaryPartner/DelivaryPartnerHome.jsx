@@ -79,19 +79,17 @@ function DelivaryPartnerHome() {
   }, [lat, long])
 
   return (
-    <div>
-      <h1>Delivary Partner Home</h1>
-      <p>
-        My position: lattitude: {lat}, longitude: {long}
-      </p>
-      <h2>Orders</h2>
-      {orders.map((order, index) => {
-        return (
-          <div key={index}>
-            <Order order={order} index={index} />
-          </div>
-        )
-      })}
+    <div className=' flex flex-col items-center bg-white h-screen'>
+      <h2 className='flex justify-center p-2 text-3xl font-extrabold'>ORDERS</h2>
+      <div className=' w-1/2 bg-green-50 p-2'>
+        {orders.map((order, index) => {
+          return (
+            <div key={index}>
+              <Order order={order} index={index} />
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

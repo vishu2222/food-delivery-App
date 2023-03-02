@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { updateOrder } from './partnerRequests'
+import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer } from '@chakra-ui/react'
 
 function Order({ order, index }) {
   const orderId = order.order_id
@@ -21,15 +22,36 @@ function Order({ order, index }) {
 
   return (
     <div>
-      <h3>{index + 1}.Order Details</h3>
-      <p>order status: {status}</p>
-      <p>Restaurant name: {order.restaurant_name}</p>
-      <p>Restaurant address: {order.address}</p>
-      <p>Phone: {order.phone}</p>
-
-      <p>order amount: ₹{totalPrice}</p>
-      <button onClick={() => updateDelivary('awaiting delivery')}>click to update pickup</button>
-      <button onClick={() => updateDelivary('delivered')}>click to update delivary</button>
+      <TableContainer>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>Restaurant name</Th>
+              <Th>Restaurant address</Th>
+              <Th>Phone</Th>
+              <Th>order amount</Th>
+              <Th>order status</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>{order.restaurant_name}</Td>
+              <Td>{order.address}</Td>
+              <Td>{order.phone}</Td>
+              <Td>₹{totalPrice}</Td>
+              <Td>{status}</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <div className='flex justify-around p-2'>
+        <button className='btn' onClick={() => updateDelivary('awaiting delivery')}>
+          pickup
+        </button>
+        <button className='btn' onClick={() => updateDelivary('delivered')}>
+          deliver
+        </button>
+      </div>
     </div>
   )
 }
