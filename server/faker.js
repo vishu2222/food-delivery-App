@@ -12,8 +12,8 @@ const pool = new Pool({
   port: config.dbPort
 })
 
-const numRestaurants = 2
-const numItems = 2
+const numRestaurants = 1000
+const numItems = 30
 const salt = await bcrypt.genSalt()
 
 async function insertRestaurantUsers() {
@@ -21,12 +21,12 @@ async function insertRestaurantUsers() {
     const user_name = `restaurant${i}`
     const user_type = `restaurant`
     const password = await bcrypt.hash(`restaurant${i}`, salt)
-    const restaurant_name = user_name
+    const restaurant_name = `Restaurant${i}`
     const phone = String(2222222222 + i)
     const lat = 12.97202 + Math.random() / 100.0
     const long = 77.59025 + Math.random() / 100.0
-    const address = `address${i}`
-    const city = `city${i}`
+    const address = `Address${i}`
+    const city = `City${i}`
     const start_time = '10:05 AM'
     const close_time = '11:00 PM'
     const img = faker.image.imageUrl(300, 300, 'food', true)
@@ -54,17 +54,22 @@ async function insertRestaurantUsers() {
 
     // inserting into food_items Table
     for (let item = 1; item <= numItems; item++) {
-      const itemName = `item${item}`
+      const itemName = `Item${item}`
       const itemPrice = Math.round(Math.random() * 100)
       const itemImg = faker.image.imageUrl(150, 150, 'food', true)
+
+      const description = faker.lorem.sentences()
+      const category = ['veg', 'non-veg'][Math.floor(Math.random() * 2)]
+      const availability = [true, false][Math.floor(Math.random() * 2)]
 
       const response = await client.query(`select restaurant_id from restaurant where restaurant_name=$1`, [
         restaurant_name
       ])
       const resId = response.rows[0].restaurant_id
 
-      const query = `insert into food_item(item_name, price, restaurant_id, img) values($1, $2, $3, $4)`
-      const params = [itemName, itemPrice, resId, itemImg]
+      const query = `insert into food_item(item_name, price, restaurant_id, img, description, category, availability) 
+      values($1, $2, $3, $4, $5, $6, $7)`
+      const params = [itemName, itemPrice, resId, itemImg, description, category, availability]
       await client.query(query, params)
     }
 
