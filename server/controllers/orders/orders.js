@@ -35,7 +35,7 @@ export async function createOrder(req, res) {
     }, 0)
 
     await placeOrder(restaurantId, addressId, totalAmount, JSON.stringify(clientCartItems), orderTime, customerId)
-    const orderId = await getOrderId(customerId, restaurantId)
+    const orderId = await getOrderId(customerId, restaurantId) // can getit from placeorder using 'returning' in query
 
     res.status(201).json({
       orderId,
@@ -86,7 +86,7 @@ async function updateRestaurantsConfirmation(orderId, req, res) {
     const customerId = order.customer_id
 
     const updateValid = validateOrderUpdate(orderStatusUpdate, currentStatus, 'restaurant', req, res)
-    if (!updateValid) return
+    if (!updateValid) return // 400 response is sent by validateOrderUpdate. may need to bring res to controller
 
     await updateRestaurantConfirmation(orderId, orderStatusUpdate) //db query
     res.json({ msg: orderStatusUpdate })
@@ -131,6 +131,7 @@ async function assignDeliveryPartner(restaurantId, orderId, customerId) {
     notifyRestaurant({ type: 'update', orderId, orderStatus, restaurantId })
     notifyCustomer({ type: 'update', orderStatus, customerId })
   } catch (error) {
+    console.log(error)
     if (error.message === 'orderNotFound') {
       //
     }
@@ -142,24 +143,28 @@ async function assignDeliveryPartner(restaurantId, orderId, customerId) {
 }
 
 async function findNearestDeliveryPartner(restaurantDetails) {
-  const lat = restaurantDetails.lat
-  const long = restaurantDetails.long
-  let partnerId
-  let max = Infinity
+  try {
+    const lat = restaurantDetails.lat
+    const long = restaurantDetails.long
+    let partnerId
+    let max = Infinity
 
-  if (Object.keys(unassignedPartnerLocations).length === 0) {
-    // need to handle the case where no partners are available
-  }
-
-  for (let key of Object.keys(unassignedPartnerLocations)) {
-    let distance = getDistance(unassignedPartnerLocations[key], { latitude: lat, longitude: long })
-    if (distance < max) {
-      max = distance
-      partnerId = key
+    for (let key of Object.keys(unassignedPartnerLocations)) {
+      let distance = getDistance(unassignedPartnerLocations[key], { latitude: lat, longitude: long })
+      if (distance < max) {
+        max = distance
+        partnerId = key
+      }
     }
-  }
 
-  return Number(partnerId)
+    if (partnerId === 'undefined') {
+      // need to do retrying before cancelling
+    }
+
+    return Number(partnerId)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 async function updatePartnersConfirmation(orderId, req, res) {
