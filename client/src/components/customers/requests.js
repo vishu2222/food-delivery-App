@@ -19,6 +19,18 @@ async function getOrderDetails(orderId) {
   return [res.status, await res.json()]
 }
 
+export async function getAllOrders() {
+  const res = await fetch(`${baseUrl}/orders`, {
+    credentials: 'include'
+  })
+
+  return await res.json()
+  // if (res.status !== 200) {
+  //   return [res.status, null]
+  // }
+  // return [res.status, await res.json()]
+}
+
 export async function getRestaurants() {
   const res = await fetch(`${baseUrl}/restaurants`)
   const response = await res.json()
@@ -64,6 +76,16 @@ async function addNewAddress(address) {
   })
 
   return res.status
+}
+
+export async function getAddressFromPosition(lat, long) {
+  const res = await fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.REACT_APP_MAPKEY}`,
+    { mode: 'cors' }
+  )
+  if (res.ok) {
+    return await res.json()
+  }
 }
 
 const requests = {
