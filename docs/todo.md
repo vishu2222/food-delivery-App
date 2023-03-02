@@ -1,7 +1,7 @@
 ### review from demos
 
 - [*] add backend routes and establish the contracts before working on frontend
-
+- [ ] mov enviornment valiables to system enviornment
 - [*] modify db schema, remove order items and json object to the orders table.
 - [*] build api for restaurents and delivary partners
 - [*] remove business logic from models
@@ -50,6 +50,9 @@
 - [ ] need to think if the app works when multiple devices are used to accquire sessions
 - [ ] need to improve UI
 - [ ] have to handle what happens when no partners are available
+- [ ] add customer home icon in maps
+- [ ] may not need to save assigned partner locations in server memory
+- [ ] need to handle showing map in order details page based on order Id
 
 ### Additional features that can be added
 
