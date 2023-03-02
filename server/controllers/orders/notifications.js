@@ -52,6 +52,7 @@ export function notifyPartner(notification) {
         total_price: notification.orderAmount
       })
 
+      // after delivery assigned move the partner from unassigned to assignedPartnerMap
       const socketId = unassignedPartnerMap[partnerId]
       delete unassignedPartnerMap[partnerId]
       assignedPartnerMap[partnerId] = socketId
@@ -69,6 +70,7 @@ export function notifyCustomer(notification) {
     }
 
     if (notification.orderStatus === 'delivered') {
+      // after delivery move the partner to unassigned map
       const partnerId = notification.partnerId
       const socketId = assignedPartnerMap[partnerId]
       delete assignedPartnerMap[partnerId]

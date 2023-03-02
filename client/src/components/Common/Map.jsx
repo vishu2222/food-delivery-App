@@ -15,8 +15,6 @@ const center = {
 }
 
 function MyComponent() {
-  // process.env.REACT_APP_MAPKEY
-
   const [partnerAssigned, setPartnerAssigned] = useState(false)
 
   const deliveryAddress = useSelector((state) => state.delivaryAddress)
@@ -31,6 +29,7 @@ function MyComponent() {
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: ''
+    // process.env.REACT_APP_MAPKEY
   })
 
   useEffect(() => {
