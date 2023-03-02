@@ -11,6 +11,7 @@ import Checkout from './components/customers/orders/Checkout'
 import ShowRestaurant from './components/customers/restaurants/Restaurant'
 import AddNewAddress from './components/customers/address/AddNewAddress'
 import OrderDetails from './components/customers/orders/OrderDetails'
+import MyOrders from './components/customers/orders/MyOrders'
 
 import RestaurantHome from './components/restaurants/RestaurantHome'
 import RestaurantRegistration from './components/restaurants/RestaurantRegistration'
@@ -33,6 +34,7 @@ function App() {
           <Route path='/check-out' element={<Checkout />}></Route>
           <Route path='/register-customer' element={<CustomerRegistration />} />
           <Route path='/add-address' element={<AddNewAddress />} />
+          <Route path='/orders' element={<MyOrders />} />
           <Route path='/order-details/:orderId' element={<OrderDetails />} />
 
           {/* restaurants requests routes */}
