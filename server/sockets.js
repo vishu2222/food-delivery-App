@@ -13,6 +13,7 @@ export default {
       try {
         const sessionId = socket.handshake.headers.cookie.split('sessionId=')[1]
         const session = await getSessionUserDetails(sessionId)
+        // console.log(session)
 
         if (session.user_type === 'restaurant') {
           restaurantMap[session.restaurant_id] = socket.id
@@ -46,25 +47,26 @@ export default {
 
     io.on('connection', (socket) => {
       socket.on('partnerLiveLocation', async (location) => {
-        // console.log('assignedPartnerMap:', assignedPartnerMap)
-        // console.log('unassignedPartnerMap:', unassignedPartnerMap)
+        try {
+          if (unassignedPartnerMap[socket.partnerId]) {
+            // i.e, is socket-partner is not assigned an order
 
-        if (unassignedPartnerMap[socket.partnerId]) {
-          // i.e, is socket-partner is not assigned an order
+            unassignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
+          } else {
+            const customerId = socket.customerId
+            const restaurantId = socket.restaurantId
 
-          unassignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
-        } else {
-          const customerId = socket.customerId
-          const restaurantId = socket.restaurantId
+            if (customerId === undefined || restaurantId === undefined) {
+              const [assigned, order] = await isPartnerAssigned(socket.partnerId)
+              socket.restaurantId = order.restaurant_id
+              socket.customerId = order.customer_id
+            }
 
-          if (customerId === undefined || restaurantId === undefined) {
-            const [assigned, order] = await isPartnerAssigned(socket.partnerId)
-            socket.restaurantId = order.restaurant_id
-            socket.customerId = order.customer_id
+            socket.to(customerMap[customerId]).emit('partnerLocationUpdate', location)
+            socket.to(restaurantMap[restaurantId]).emit('partnerLocationUpdate', location)
           }
-
-          socket.to(customerMap[customerId]).emit('partnerLocationUpdate', location)
-          socket.to(restaurantMap[restaurantId]).emit('partnerLocationUpdate', location)
+        } catch (err) {
+          // if restaurant copy pastes http://localhost:3001/delivery_partner-Home url then order is null in above
         }
       })
     })
