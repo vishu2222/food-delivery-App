@@ -53,6 +53,7 @@ function Nav() {
   useEffect(() => {
     ;(async () => {
       const response = await getAddressFromPosition(lat, long)
+      if (response === undefined) return
       setCurrentAddress(response.results[0].formatted_address)
     })()
   }, [lat, long])
