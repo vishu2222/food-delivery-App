@@ -12,6 +12,7 @@ function Address({ address, index, setSelectedAddressId, selectedAddressId }) {
       return
     }
     setSelectedAddressId(null)
+    setDisplayMsg('select an address')
   }
 
   return (
