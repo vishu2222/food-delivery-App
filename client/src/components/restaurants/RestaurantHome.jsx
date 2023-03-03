@@ -4,7 +4,6 @@ import { getAllOrders } from './requests/restaurantRequests'
 import Order from './Order'
 import { useNavigate } from 'react-router-dom'
 import { formatTime } from '../utlities/formateTime'
-import { useToast } from '@chakra-ui/react'
 
 const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
 
@@ -32,18 +31,6 @@ function RestaurantHome() {
     })()
   }, [navigate])
 
-  function updateOrder(orderId, orderStatus) {
-    const updatedOrders = orders.map((order) => {
-      if (order.order_id === Number(orderId)) {
-        order['status'] = orderStatus
-        return order
-      }
-      return order
-    })
-
-    setOrders(updatedOrders)
-  }
-
   useEffect(() => {
     socket.connect()
 
@@ -58,6 +45,18 @@ function RestaurantHome() {
 
     socket.on('restaurant-update', (notification) => {
       updateOrder(notification.order_id, notification.status)
+
+      function updateOrder(orderId, orderStatus) {
+        const updatedOrders = orders.map((order) => {
+          if (order.order_id === Number(orderId)) {
+            order['status'] = orderStatus
+            return order
+          }
+          return order
+        })
+
+        setOrders(updatedOrders)
+      }
     })
 
     return () => {
