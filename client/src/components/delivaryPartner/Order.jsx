@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { updateOrder } from './partnerRequests'
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer } from '@chakra-ui/react'
+import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from '@chakra-ui/react'
 
 function Order({ order, index }) {
   const orderId = order.order_id
