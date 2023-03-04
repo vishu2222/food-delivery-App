@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3000'
+const baseUrl = 'http://localhost:3000/api'
 
 async function registerCustomer(body) {
   const res = await fetch(`${baseUrl}/users`, {

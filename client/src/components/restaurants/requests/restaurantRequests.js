@@ -1,9 +1,10 @@
-const baseUrl = 'http://localhost:3000'
+const baseUrl = 'http://localhost:3000/api'
 
 export async function getAllOrders() {
   const res = await fetch(`${baseUrl}/orders`, {
     credentials: 'include'
   })
+
   if (res.status === 401) {
     return [res.status, null]
   }
