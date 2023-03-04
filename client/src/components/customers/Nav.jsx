@@ -54,7 +54,12 @@ function Nav() {
     ;(async () => {
       const response = await getAddressFromPosition(lat, long)
       if (response === undefined) return
-      setCurrentAddress(response.results[0].formatted_address)
+      try {
+        const address = response.result.formatted_address
+        setCurrentAddress(address)
+      } catch (err) {
+        setCurrentAddress('coulnt get location')
+      }
     })()
   }, [lat, long])
 

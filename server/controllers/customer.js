@@ -28,3 +28,28 @@ export async function getCustomerAddress(req, res) {
     res.sendStatus(500)
   }
 }
+
+export async function getCustomerLocation(req, res) {
+  try {
+    const lat = req.body.lat
+    const long = req.body.long
+
+    if (!Number(lat) || !Number(long)) return res.sendStatus(400) // assumes 0, 0 is not allowed
+
+    if (Math.abs(lat) > 90 || Math.abs(long) > 180) return res.sendStatus(400)
+
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.MAP_KEY}`
+    )
+
+    if (response.ok) {
+      const data = await response.json()
+      return res.json({ result: data.results[0] })
+    }
+
+    const result = await response.json()
+    return res.status(400).json({ status: result.status })
+  } catch (err) {
+    res.sendStatus(500)
+  }
+}

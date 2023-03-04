@@ -79,12 +79,15 @@ async function addNewAddress(address) {
 }
 
 export async function getAddressFromPosition(lat, long) {
-  const res = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.REACT_APP_MAPKEY}`,
-    { mode: 'cors' }
-  )
+  const res = await fetch(`${baseUrl}/customers/location`, {
+    credentials: 'include',
+    headers: { 'content-type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify({ lat, long })
+  })
+
   if (res.ok) {
-    return await res.json()
+    return res.json()
   }
 }
 

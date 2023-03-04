@@ -52,7 +52,14 @@ function AddNewAddress() {
   useEffect(() => {
     ;(async () => {
       const response = await getAddressFromPosition(lat, long)
-      setAddress(response.results[0].formatted_address)
+      if (response === undefined) return
+      try {
+        const address = response.result.formatted_address
+        setAddress(address)
+      } catch (err) {
+        setAddress('coulnt get location')
+      }
+      // setAddress(response.results[0].formatted_address)
     })()
   }, [lat, long])
 
