@@ -38,4 +38,5 @@ app.use('/api/customers', addressRouter)
 httpServer.listen(port, '0.0.0.0', (err) => {
   if (err) console.log(err)
   console.log('server listening on port:', port)
+  console.log('config:', config)
 })
