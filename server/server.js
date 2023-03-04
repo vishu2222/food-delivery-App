@@ -15,6 +15,7 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 
 const port = config.port
+
 const app = express()
 
 app.use(cors({ origin: ['http://localhost:3001', 'http://localhost:3000'], credentials: true }))
@@ -36,4 +37,5 @@ app.use('/api/customers', addressRouter)
 
 httpServer.listen(port, () => {
   console.log('server listening on port:', port)
+  console.log('config:', config)
 })
