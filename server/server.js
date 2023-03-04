@@ -35,7 +35,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/sessions', sessionRouter)
 app.use('/api/customers', addressRouter)
 
-httpServer.listen(port, () => {
+httpServer.listen(port, '0.0.0.0', (err) => {
+  if (err) console.log(err)
   console.log('server listening on port:', port)
-  console.log('config:', config)
 })
