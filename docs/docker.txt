@@ -1,0 +1,8 @@
+// docker build 
+ docker build -t food-app --build-arg PORT=3000 --build-arg DB_USER=vishu1 .
+
+// docker run
+ docker run -p 3000:3000 food-app
+
+// docker version
+ docker -v
