@@ -1,4 +1,6 @@
-const baseUrl = 'http://localhost:8080/api'
+// const baseUrl = 'http://localhost:8080/api'
+
+const baseUrl = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8080/api'
 
 async function registerCustomer(body) {
   const res = await fetch(`${baseUrl}/users`, {
