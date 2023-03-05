@@ -15,8 +15,6 @@ export async function getRestaruants() {
   return res.rows
 }
 
-console.log(await getRestaruants())
-
 export async function getMenu(restaurantId) {
   const res = await pool.query(
     'SELECT item_id, item_name, price, description, category, availability, img FROM food_item  WHERE restaurant_id = $1;',
