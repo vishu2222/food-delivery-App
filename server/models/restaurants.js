@@ -3,11 +3,10 @@ import config from '../config.js'
 
 const { Pool } = pg
 const pool = new Pool({
-  user: config.dbUser,
-  host: config.dbHost,
-  database: config.dbName,
-  password: config.dbPwd,
-  port: config.dbPort
+  connectionString: config.DB_CONN_STRING,
+  ssl: {
+    rejectUnauthorized: false
+  }
 })
 
 export async function getRestaruants() {

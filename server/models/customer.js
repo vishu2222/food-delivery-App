@@ -2,16 +2,25 @@ import pg from 'pg'
 import config from '../config.js'
 
 const { Pool } = pg
+
 const pool = new Pool({
-  user: config.dbUser,
-  host: config.dbHost,
-  database: config.dbName,
-  password: config.dbPwd,
-  port: config.dbPort
+  connectionString: config.DB_CONN_STRING,
+  ssl: {
+    rejectUnauthorized: false
+  }
 })
 
 export async function addAddress(address, customerId) {
-  const params = [address.lat, address.long, address.house_no, address.locality, address.city, address.state, address.pincode, customerId]
+  const params = [
+    address.lat,
+    address.long,
+    address.house_no,
+    address.locality,
+    address.city,
+    address.state,
+    address.pincode,
+    customerId
+  ]
   console.log('params', params)
   const res = await pool.query(
     `insert into customer_address
