@@ -48,7 +48,7 @@ export async function getCustomerLocation(req, res) {
     // console.log('hi1')
     if (response.ok) {
       const data = await response.json()
-      console.log(data.results[0])
+      // console.log(data.results[0])
       return res.json({ result: data.results[0] })
     }
 
