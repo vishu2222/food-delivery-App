@@ -24,3 +24,10 @@ Ref: https://joets.medium.com/install-postgresql-12-postgis-on-ubuntu-20-4-in-5-
 sudo apt install postgresql-12 postgresql-client-12
 sudo sudo apt install gnupg2
 sudo apt install postgis postgresql-12-postgis-3
+
+
+// openssl
+
+openssl genrsa -out server.key 2048
+openssl req -new -key server.key -out server.csr
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
