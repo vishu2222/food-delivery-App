@@ -30,6 +30,11 @@ export async function createSession(sessionId, userId) {
   if (res.rowCount < 1) throw new Error('insertFailed')
 }
 
+export async function deleteSession(sessionId) {
+  const query = `delete from sessions where session_id = &1;`
+  await pool.query(query, [sessionId])
+}
+
 export async function getSessionUserDetails(sessionId) {
   //  need to refactor the query to reduce multiple joins
   const query = `with cte as 

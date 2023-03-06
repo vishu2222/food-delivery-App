@@ -1,4 +1,4 @@
-import { getUserDetails, createSession } from '../models/sessions.js'
+import { getUserDetails, createSession, deleteSession } from '../models/sessions.js'
 import bcrypt from 'bcrypt'
 import { v4 as uuid } from 'uuid'
 
@@ -32,6 +32,11 @@ export async function userLogin(req, res) {
 
 export async function authorizeUser(req, res) {
   return res.status(200).json({ userRole: req.userRole })
+}
+
+export async function logout(req, res) {
+  await deleteSession(req.sessionId)
+  return res.clearCookie('sessionId').sendStatus(200)
 }
 
 // const deviceid = req.headers['user-agent']
