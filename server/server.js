@@ -2,7 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import config from './config.js'
 import cookieParser from 'cookie-parser'
-// import { createServer } from 'http'
 import { createServer } from 'https'
 import fs from 'fs'
 import socketSetup from './sockets.js'
@@ -20,7 +19,7 @@ const port = config.port
 
 const app = express()
 
-app.use(cors({ origin: ['http://localhost:8080'], credentials: true }))
+app.use(cors({ origin: [], credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
 
@@ -45,5 +44,4 @@ app.use('/api/customers', addressRouter)
 httpServer.listen(port, '0.0.0.0', (err) => {
   if (err) console.log(err)
   console.log('server listening on port:', port)
-  // console.log('config:', config)
 })
