@@ -3,10 +3,10 @@
  
 1) LOGIN AND REGISTRATION REQUESTS            RESOURCE-PATH                           CONTROLLER
  
-userRegisters                                 POST  /users                             registerUser
-acquireNewSession                             POST  /sessions                          loginUser
-getSession                                    GET   /sessions                          authorizeMe
-
+userRegisters                                 POST    /users                            registerUser
+acquireNewSession                             POST    /sessions                         loginUser
+getSession                                    GET     /sessions                         authorizeMe
+logout                                        DELETE  /sessions                         
 
 2) CUSTOMER REQUESTS:                      
 
