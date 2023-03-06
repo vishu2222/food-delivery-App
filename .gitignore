@@ -1,6 +1,10 @@
 debounce.js
 scratchPad.js
 insertFakeData.js
+server.crt
+server.csr
+server.key
+faker.js
 
 # Logs
 logs
