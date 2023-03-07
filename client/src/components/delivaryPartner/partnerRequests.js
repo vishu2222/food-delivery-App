@@ -1,8 +1,5 @@
-// const baseUrl = 'http://localhost:8080/api'
+const baseUrl = process.env.NODE_ENV === 'production' ? '/api' : 'https://localhost:8080/api'
 
-const baseUrl = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8080/api'
-
-console.log('baseUrl', baseUrl)
 export async function getAllOrders() {
   const res = await fetch(`${baseUrl}/orders`, {
     credentials: 'include'
