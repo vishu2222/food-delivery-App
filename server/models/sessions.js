@@ -31,7 +31,7 @@ export async function createSession(sessionId, userId) {
 }
 
 export async function deleteSession(sessionId) {
-  const query = `delete from sessions where session_id = &1;`
+  const query = `delete from sessions where session_id = $1;`
   await pool.query(query, [sessionId])
 }
 
