@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { SiFoodpanda } from 'react-icons/si'
 import { BiUserCircle } from 'react-icons/bi'
 import { BsCart4 } from 'react-icons/bs'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Cart from './cart/Cart'
 import { useNavigate } from 'react-router-dom'
 import { getAddressFromPosition } from './requests'
+import requests from './requests'
+import { isUserSignedIn } from '../../store/actions'
 import {
   Popover,
   PopoverTrigger,
@@ -19,11 +21,13 @@ import {
 function Nav() {
   const cart = useSelector((state) => state.cart)
   const userSignedIn = useSelector((state) => state.userSigned)
+
   // const userName = useSelector((state) => state.userName)
 
   const [quantity, setQuantity] = useState(0)
   const [currentAddress, setCurrentAddress] = useState('')
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     console.log('cart:', cart, typeof cart, '')
@@ -68,6 +72,7 @@ function Nav() {
       navigate('/login')
       return
     }
+
     navigate('/check-out')
   }
 
@@ -81,6 +86,16 @@ function Nav() {
 
   function goToHome() {
     navigate('/customer-Home')
+  }
+
+  async function logout() {
+    const status = await requests.logout()
+
+    if (status === 200) {
+      dispatch(isUserSignedIn(false))
+      return
+    }
+    navigate('/login')
   }
 
   return (
@@ -101,10 +116,16 @@ function Nav() {
             <Portal>
               <PopoverContent>
                 <PopoverCloseButton />
-                <PopoverBody>
-                  <Button onClick={gotToLogin} colorScheme='blue'>
+                <PopoverBody className=' flex flex-col'>
+                  <Button onClick={gotToLogin} colorScheme='blue' className=' m-2 mr-6'>
                     {userSignedIn ? 'Your-Orders' : 'Sign In'}
                   </Button>
+                  {/* <br /> */}
+                  {userSignedIn && (
+                    <Button onClick={logout} colorScheme='blue' className=' m-2 mr-6'>
+                      logout
+                    </Button>
+                  )}
                 </PopoverBody>
               </PopoverContent>
             </Portal>

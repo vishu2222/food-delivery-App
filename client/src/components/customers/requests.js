@@ -1,6 +1,4 @@
-// const baseUrl = 'http://localhost:8080/api'
-
-const baseUrl = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8080/api'
+const baseUrl = process.env.NODE_ENV === 'production' ? '/api' : 'https://localhost:8080/api'
 
 async function registerCustomer(body) {
   const res = await fetch(`${baseUrl}/users`, {
@@ -93,11 +91,20 @@ export async function getAddressFromPosition(lat, long) {
   }
 }
 
+async function logout() {
+  const res = await fetch(`${baseUrl}/sessions`, { credentials: 'include', method: 'DELETE' })
+  console.log('res', res.ok)
+  if (res.ok) {
+    return res.status
+  }
+}
+
 const requests = {
   registerCustomer: registerCustomer,
   getRestaurants: getRestaurants,
   addNewAddress: addNewAddress,
-  getOrderDetails: getOrderDetails
+  getOrderDetails: getOrderDetails,
+  logout: logout
 }
 
 export default requests
