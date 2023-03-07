@@ -35,8 +35,13 @@ export async function authorizeUser(req, res) {
 }
 
 export async function logout(req, res) {
-  await deleteSession(req.sessionId)
-  return res.clearCookie('sessionId').sendStatus(200)
+  try {
+    await deleteSession(req.sessionId)
+    res.clearCookie('sessionId')
+    res.sendStatus(200)
+  } catch (err) {
+    res.sendStatus(500)
+  }
 }
 
 // const deviceid = req.headers['user-agent']
