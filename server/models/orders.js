@@ -144,15 +144,6 @@ export async function updatePickup(orderId) {
   if (res.rowCount < 1) return new Error('orderNotFound')
 }
 
-// export async function updateDelivery(orderId) {
-//   const query = `UPDATE orders
-//                  SET status = 'delivered'
-//                  WHERE order_id = $1;`
-//   const params = [orderId]
-//   const res = await pool.query(query, params)
-//   if (res.rowCount < 1) return new Error('orderNotFound')
-// }
-
 export async function updateDelivery(orderId, status) {
   const query = `UPDATE orders
                  SET status = $2
@@ -178,6 +169,13 @@ export async function getCustomerId(orderId) {
   return res.rows[0].customer_id
 }
 
+export async function cancellOrder(orderId) {
+  const query = `UPDATE orders SET status = 'cancelled' WHERE order_id = $1;`
+  const params = [orderId]
+
+  const res = await pool.query(query, params)
+}
+
 // export async function updateDeliveryConfirmation(orderId, statusUpdate) {
 //   const query = `UPDATE orders
 //                  SET status = $2
@@ -186,3 +184,5 @@ export async function getCustomerId(orderId) {
 //   const res = await pool.query(query, params)
 //   if (res.rowCount < 1) throw new Error('db err: cannot update the order')
 // }
+
+// const test = pool.query('select * from ')
