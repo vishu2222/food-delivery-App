@@ -1,0 +1,6 @@
+// connect to aws
+ssh -i "pairKey.pem" ubuntu@ec2-65-1-86-68.ap-south-1.compute.amazonaws.com
+sudo su -
+
+// to identify ps id of node server
+ps aux | grep node
