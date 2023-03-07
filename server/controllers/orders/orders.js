@@ -1,7 +1,7 @@
 import { getOrderId, placeOrder, getAllCustomerOrders, getAllRestaurantOrders } from '../../models/orders.js'
 import { getItemPrices, fetchOrderDetails, getAllPartnersOrders, getOrder } from '../../models/orders.js'
-import { updateRestaurantConfirmation, updateDelivery, getCustomerId } from '../../models/orders.js'
-import { getRestaurantDetails, assignPartner, getOrderAmount } from '../../models/orders.js'
+import { updateRestaurantConfirmation, updateDelivery } from '../../models/orders.js'
+import { getRestaurantDetails, assignPartner, cancellOrder } from '../../models/orders.js'
 import { notifyPartner, notifyRestaurant, notifyCustomer } from './notifications.js'
 import { validateOrderUpdate } from './validateOrderUpdate.js'
 import { addOrderItemNames } from './addOrderItemNames.js'
@@ -9,6 +9,7 @@ import { sendNewOrderNotification } from './notifications.js'
 import { unassignedPartnerLocations } from '../../models/partnerLiveLocations.js'
 import { getDistance } from 'geolib'
 
+console.log(unassignedPartnerLocations)
 // create order example cart =  {"restaurantId":1, "addressId":1, "items":{"1":2, "2":3}}
 export async function createOrder(req, res) {
   try {
@@ -104,13 +105,28 @@ async function updateRestaurantsConfirmation(orderId, req, res) {
   }
 }
 
+let retryCount = 0
+
 async function assignDeliveryPartner(restaurantId, orderId, customerId) {
   try {
     const restaurantDetails = await getRestaurantDetails(restaurantId)
+    let partnerId = await findNearestDeliveryPartner(restaurantDetails[0])
 
-    const partnerId = await findNearestDeliveryPartner(restaurantDetails[0])
+    while (partnerId === undefined && retryCount < 5) {
+      retryCount++
+      console.log('retryCount:', retryCount, 'partnerId:', partnerId)
+      partnerId = await findNearestDeliveryPartner(restaurantDetails[0])
+    }
 
-    // need to handle if no partner is available
+    retryCount = 0
+    if (partnerId === undefined) {
+      console.log('cancelling order')
+      await cancellOrder(orderId)
+      const orderStatus = 'cancelled due to delivery unavailable'
+      notifyRestaurant({ type: 'update', orderId, orderStatus, restaurantId })
+      notifyCustomer({ type: 'update', orderStatus, customerId })
+      return
+    }
 
     await assignPartner(orderId, partnerId)
 
@@ -133,7 +149,7 @@ async function assignDeliveryPartner(restaurantId, orderId, customerId) {
   } catch (error) {
     console.log(error)
     if (error.message === 'orderNotFound') {
-      //
+      // this case doesnt occur
     }
     // need to retry before cancelling
     // const orderStatus = 'cancelled'
@@ -157,8 +173,8 @@ async function findNearestDeliveryPartner(restaurantDetails) {
       }
     }
 
-    if (partnerId === 'undefined') {
-      // need to do retrying before cancelling
+    if (partnerId === undefined) {
+      return partnerId
     }
 
     return Number(partnerId)
