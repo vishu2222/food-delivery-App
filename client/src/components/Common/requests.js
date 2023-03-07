@@ -1,6 +1,4 @@
-// const baseUrl = 'http://localhost:8080/api'
-
-const baseUrl = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8080/api'
+const baseUrl = process.env.NODE_ENV === 'production' ? '/api' : 'https://localhost:8080/api'
 
 async function login(userName, password) {
   const res = await fetch(`${baseUrl}/sessions`, {
@@ -9,9 +7,11 @@ async function login(userName, password) {
     method: 'POST',
     body: JSON.stringify({ userName, password })
   })
+
   if (res.status !== 201) {
     return [res.status, null]
   }
+
   const data = await res.json()
   return [res.status, data.user_type]
 }
