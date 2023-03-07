@@ -8,7 +8,7 @@ function RestaurantCard({ restaurant }) {
   return (
     <div
       onClick={() => navigate(`/restaurant/${restaurant.restaurant_id}`)}
-      className='border border-slate-200 hover:border-slate-700  transform hover:scale-105  transition duration-300'>
+      className='border border-slate-200 hover:border-slate-700  transform hover:scale-105  transition duration-300 cursor-pointer'>
       <Card className=' flex w-full'>
         <CardBody>
           <Image src={restaurant.img} borderRadius='lg' alt='restaurantImg' className=' m-auto' />
