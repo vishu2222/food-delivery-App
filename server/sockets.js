@@ -13,7 +13,6 @@ export default {
       try {
         const sessionId = socket.handshake.headers.cookie.split('sessionId=')[1]
         const session = await getSessionUserDetails(sessionId)
-        // console.log(session)
 
         if (session.user_type === 'restaurant') {
           restaurantMap[session.restaurant_id] = socket.id
@@ -47,12 +46,21 @@ export default {
 
     io.on('connection', (socket) => {
       socket.on('partnerLiveLocation', async (location) => {
+        // console.log('assignedPartnerMap:', assignedPartnerMap)
+        // console.log('unassignedPartnerMap:', unassignedPartnerMap)
+        // console.log('unassignedPartnerLocations:', unassignedPartnerLocations)
+
         try {
-          if (unassignedPartnerMap[socket.partnerId]) {
+          if (unassignedPartnerMap[socket.partnerId] === null) {
+            socket.disconnect()
+          }
+
+          if (unassignedPartnerMap[socket.partnerId] !== undefined) {
             // i.e, is socket-partner is not assigned an order
 
             unassignedPartnerLocations[socket.partnerId] = { latitude: location.lat, longitude: location.long }
           } else {
+            // when he is assigned an order but didnt get customer or restaurant id
             const customerId = socket.customerId
             const restaurantId = socket.restaurantId
 
@@ -67,6 +75,15 @@ export default {
           }
         } catch (err) {
           // if restaurant copy pastes http://localhost:3001/delivery_partner-Home url then order is null in above
+        }
+      })
+
+      // console.log('unassignedPartnerLocations:', unassignedPartnerLocations)
+      socket.on('disconnect', () => {
+        // console.log(socket.partnerId)
+        if (socket.partnerId && socket.restaurantId === undefined) {
+          delete unassignedPartnerMap[socket.partnerId]
+          delete unassignedPartnerLocations[socket.partnerId]
         }
       })
     })
