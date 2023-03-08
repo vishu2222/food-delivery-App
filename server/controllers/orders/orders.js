@@ -9,7 +9,6 @@ import { sendNewOrderNotification } from './notifications.js'
 import { unassignedPartnerLocations } from '../../models/partnerLiveLocations.js'
 import { getDistance } from 'geolib'
 
-console.log(unassignedPartnerLocations)
 // create order example cart =  {"restaurantId":1, "addressId":1, "items":{"1":2, "2":3}}
 export async function createOrder(req, res) {
   try {
@@ -129,6 +128,7 @@ async function assignDeliveryPartner(restaurantId, orderId, customerId) {
     }
 
     await assignPartner(orderId, partnerId)
+    delete unassignedPartnerLocations[partnerId]
 
     const orderDetails = await getOrder(orderId)
     const orderAmount = orderDetails.total_price
@@ -165,7 +165,10 @@ async function findNearestDeliveryPartner(restaurantDetails) {
     let partnerId
     let max = Infinity
 
+    // console.log('unassignedPartnerLocations1:', unassignedPartnerLocations)
     for (let key of Object.keys(unassignedPartnerLocations)) {
+      // console.log('unassignedPartnerLocations2:', unassignedPartnerLocations)
+
       let distance = getDistance(unassignedPartnerLocations[key], { latitude: lat, longitude: long })
       if (distance < max) {
         max = distance
