@@ -1,6 +1,7 @@
 import socket from '../../sockets.js'
 import { restaurantMap, assignedPartnerMap, unassignedPartnerMap, customerMap } from '../../models/socketMap.js'
 import { addOrderItemNames } from './addOrderItemNames.js'
+import { unassignedPartnerLocations } from '../../models/partnerLiveLocations.js'
 
 export async function sendNewOrderNotification(cartItems, order_time, totalAmount, restaurantId, order_id) {
   cartItems = await addOrderItemNames(cartItems)
@@ -55,6 +56,7 @@ export function notifyPartner(notification) {
       // after delivery assigned move the partner from unassigned to assignedPartnerMap
       const socketId = unassignedPartnerMap[partnerId]
       delete unassignedPartnerMap[partnerId]
+
       assignedPartnerMap[partnerId] = socketId
     }
   } catch (err) {
@@ -72,9 +74,10 @@ export function notifyCustomer(notification) {
     if (notification.orderStatus === 'delivered') {
       // after delivery move the partner to unassigned map
       const partnerId = notification.partnerId
-      const socketId = assignedPartnerMap[partnerId]
+      // const socketId = assignedPartnerMap[partnerId]
       delete assignedPartnerMap[partnerId]
-      unassignedPartnerMap[partnerId] = socketId
+      // unassignedPartnerMap[partnerId] = socketId
+      unassignedPartnerMap[partnerId] = null
     }
   } catch (err) {
     //
