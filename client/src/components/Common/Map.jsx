@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api'
+import { GoogleMap, Marker, useLoadScript, DirectionsService, DirectionsRenderer } from '@react-google-maps/api'
 import { useSelector } from 'react-redux'
 import restaurantIcon from '../../icons/restaurant.png'
 import bikeIcon from '../../icons/bike.png'
@@ -9,28 +9,29 @@ const containerStyle = {
   height: '500px'
 }
 
-const center = {
-  lat: 12.97,
-  lng: 77.5806
-}
-
 function MyComponent() {
   const [partnerAssigned, setPartnerAssigned] = useState(false)
+  const [directions, setDirections] = useState(null)
+
+  const restaurant = useSelector((state) => state.restaurant)
+  const restaurantCenter = { lat: restaurant.lat, lng: restaurant.long }
+
+  const [mapCenter, setMapCenter] = useState({ lat: restaurant.lat, lng: restaurant.long })
 
   const deliveryAddress = useSelector((state) => state.delivaryAddress)
   const customerCenter = { lat: deliveryAddress.lat, lng: deliveryAddress.long }
 
-  const restaurant = useSelector((state) => state.restaurant)
-
-  const restaurantCenter = { lat: restaurant.lat, lng: restaurant.long }
-
   const partnerCenter = useSelector((state) => state.partnerLocation)
-  console.log('partnerLocation:', partnerCenter)
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: ''
-    // process.env.REACT_APP_MAPKEY
+    googleMapsApiKey: process.env.REACT_APP_KEY
   })
+
+  function directionsCallback(direction) {
+    if (direction !== null) {
+      setDirections(direction)
+    }
+  }
 
   useEffect(() => {
     if (partnerCenter.lat && partnerCenter.lng) {
@@ -49,66 +50,39 @@ function MyComponent() {
   }
 
   return (
-    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+    <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={14}>
       <Marker id='customer' position={customerCenter}></Marker>
       <Marker
         id='restaurant'
         position={restaurantCenter}
         icon={{ url: restaurantIcon, scaledSize: new window.google.maps.Size(40, 40) }}></Marker>
+
       {partnerAssigned && (
         <Marker
           id='partner'
           position={partnerCenter}
           icon={{ url: bikeIcon, scaledSize: new window.google.maps.Size(40, 40) }}></Marker>
       )}
+
+      {partnerAssigned && (
+        <DirectionsService
+          options={{
+            destination: new window.google.maps.LatLng(customerCenter.lat, customerCenter.lng),
+            origin: new window.google.maps.LatLng(partnerCenter.lat, partnerCenter.lng),
+            waypoints: [{ location: { lat: restaurantCenter.lat, lng: restaurantCenter.lng } }],
+            travelMode: 'DRIVING'
+          }}
+          callback={directionsCallback}></DirectionsService>
+      )}
+
+      {partnerAssigned && directions && (
+        <DirectionsRenderer
+          directions={directions}
+          options={{ polylineOptions: { strokeColor: 'green' }, suppressMarkers: true }}
+        />
+      )}
     </GoogleMap>
   )
 }
 
 export default React.memo(MyComponent)
-
-// https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png
-
-// import React, { useEffect, useState } from 'react'
-// import { useSelector } from 'react-redux'
-// import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api'
-// import restaurantIcon from '../../icons/restaurant.png'
-// import delivaryBike from '../../icons/delivaryBike.jpg'
-
-// export default function Map() {
-//   const containerStyle = { width: '700px', height: '500px' }
-//   const icon = {
-//     url: restaurantIcon,
-//     scaledSize: new window.google.maps.Size(40, 40)
-//   }
-
-//   const deliveryAddress = useSelector((state) => state.delivaryAddress)
-//   const restaurant = useSelector((state) => state.restaurant)
-//   const [showPartnerMarker, setShowParnerMarker] = useState(false)
-
-//   const customerCenter = { lat: deliveryAddress.lat, lng: deliveryAddress.long }
-//   const restaurantCenter = { lat: restaurant.lat, lng: restaurant.long }
-//   const partnerCenter = useSelector((state) => state.partnerLocation)
-
-//   useEffect(() => {
-//     if (partnerCenter.lat && partnerCenter.lng) {
-//       setShowParnerMarker(true)
-//     }
-//   }, [partnerCenter.lat, partnerCenter.lng])
-
-//   console.log('restaurantCenter', restaurantCenter)
-//   console.log('customerCenter', customerCenter)
-//   console.log('partnerCenter', partnerCenter)
-
-//   return (
-//     <LoadScript googleMapsApiKey=''>
-//       <GoogleMap mapContainerStyle={containerStyle} center={customerCenter} zoom={13}>
-//         <Marker position={restaurantCenter} icon={icon}></Marker>
-//         <Marker position={customerCenter}></Marker>
-//         {showPartnerMarker && <Marker position={partnerCenter}></Marker>}
-//       </GoogleMap>
-//     </LoadScript>
-//   )
-// }
-
-// // process.env.REACT_APP_MAPKEY
