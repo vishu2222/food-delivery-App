@@ -101,6 +101,7 @@ async function updateRestaurantsConfirmation(orderId, req, res) {
       return res.status(404).json({ msg: 'order not found' })
     }
     //
+    console.log(error)
   }
 }
 
@@ -151,10 +152,6 @@ async function assignDeliveryPartner(restaurantId, orderId, customerId) {
     if (error.message === 'orderNotFound') {
       // this case doesnt occur
     }
-    // need to retry before cancelling
-    // const orderStatus = 'cancelled'
-    // notifyRestaurant({ type: 'update', orderStatus })
-    // notifyCustomer({ type: 'update', orderStatus })
   }
 }
 
@@ -195,7 +192,7 @@ async function updatePartnersConfirmation(orderId, req, res) {
     const currentStatus = orderDetails.status
 
     const updateValid = validateOrderUpdate(orderStatusUpdate, currentStatus, 'partner', req, res)
-    if (!updateValid) return
+    if (!updateValid) return // response is sent by the validatin middleware
 
     await updateDelivery(orderId, orderStatusUpdate)
     res.json({ msg: orderStatusUpdate })
