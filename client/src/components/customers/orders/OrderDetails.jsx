@@ -13,7 +13,9 @@ import {
 } from '../../../store/actions.js'
 import Map from '../../Common/Map.jsx'
 
-const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
+// const serverUrl = 'https://localhost:8080/'
+const serverUrl = 'https://65.1.86.68:8080/'
+const socket = io(serverUrl, { autoConnect: false, transports: ['websocket'] })
 
 function OrderDetails() {
   const [showMap, setShowMap] = useState(true)
@@ -31,6 +33,9 @@ function OrderDetails() {
 
   // const state = useSelector((state) => state)
   // console.log('state>:', state)
+  useEffect(() => {
+    dispatch(clearPartnerLocation())
+  }, [])
 
   useEffect(() => {
     ;(async () => {
