@@ -52,7 +52,10 @@ export default {
 
         try {
           if (unassignedPartnerMap[socket.partnerId] === null) {
-            socket.disconnect()
+            // socket.disconnect()
+            unassignedPartnerMap[socket.partnerId] = socket.id
+            socket.customerId = undefined
+            socket.restaurantId = undefined
           }
 
           if (unassignedPartnerMap[socket.partnerId] !== undefined) {
@@ -65,6 +68,7 @@ export default {
             const restaurantId = socket.restaurantId
 
             if (customerId === undefined || restaurantId === undefined) {
+              // can instead do socket.disconnect()
               const [assigned, order] = await isPartnerAssigned(socket.partnerId)
               socket.restaurantId = order.restaurant_id
               socket.customerId = order.customer_id
@@ -81,10 +85,10 @@ export default {
       // console.log('unassignedPartnerLocations:', unassignedPartnerLocations)
       socket.on('disconnect', () => {
         // console.log(socket.partnerId)
-        if (socket.partnerId && socket.restaurantId === undefined) {
-          delete unassignedPartnerMap[socket.partnerId]
-          delete unassignedPartnerLocations[socket.partnerId]
-        }
+        // if (socket.partnerId && socket.restaurantId === undefined) {
+        delete unassignedPartnerMap[socket.partnerId]
+        delete unassignedPartnerLocations[socket.partnerId]
+        // }
       })
     })
   },
