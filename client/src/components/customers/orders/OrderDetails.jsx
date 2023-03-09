@@ -35,7 +35,7 @@ function OrderDetails() {
   // console.log('state>:', state)
   useEffect(() => {
     dispatch(clearPartnerLocation())
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     ;(async () => {
