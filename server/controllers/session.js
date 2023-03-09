@@ -9,8 +9,6 @@ export async function userLogin(req, res) {
 
     const userDetails = await getUserDetails(userName)
 
-    // console.log('userDetails', userDetails)
-
     if (!(await bcrypt.compare(password, userDetails.password))) {
       return res.status(401).json({ msg: 'wrong password' })
     }
