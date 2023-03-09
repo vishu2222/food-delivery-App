@@ -72,10 +72,10 @@ function RestaurantHome() {
   return (
     <div className='flex flex-col items-center p-4 h-screen bg-slate-400'>
       <h2 className='text-b text-3xl font-extrabold'>ORDERS</h2>
-      <div className=' bg-slate-100'>
+      <div>
         {orders.map((order, index) => {
           return (
-            <div key={index}>
+            <div key={index} className=' bg-slate-100'>
               <Order order={order} index={index} key={order.status + index} />
             </div>
           )
