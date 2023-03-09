@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { updateOrder } from './partnerRequests'
 import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from '@chakra-ui/react'
 
-function Order({ order, index }) {
+function Order({ order }) {
   const orderId = order.order_id
 
   const orderTime = order.order_time
@@ -11,12 +11,29 @@ function Order({ order, index }) {
 
   async function updateDelivary(statusUpdate) {
     const [responseStatus, orderStatus] = await updateOrder(orderId, statusUpdate)
-
     if (responseStatus !== 200) {
       //
       console.log('responseStatus:', responseStatus)
       return
     }
+
+    console.log('responseStatus:', responseStatus, 'orderStatus:', orderStatus)
+
+    //
+    // updateOrder(notification.order_id, notification.status)
+
+    //   function updateOrder(orderId, orderStatus) {
+    //     const updatedOrders = orders.map((order) => {
+    //       if (order.order_id === Number(orderId)) {
+    //         order['status'] = orderStatus
+    //         return order
+    //       }
+    //       return order
+    //     })
+
+    //     setOrders(updatedOrders)
+    //
+
     setStatus(orderStatus.msg)
   }
 
@@ -45,10 +62,14 @@ function Order({ order, index }) {
         </Table>
       </TableContainer>
       <div className='flex justify-around p-2'>
-        <button className='btn' onClick={() => updateDelivary('awaiting delivery')}>
+        <button
+          className='btn hover:border-slate-700  transform  hover:scale-125  transition duration-200 cursor-pointer hover:bg-black  hover:text-white'
+          onClick={() => updateDelivary('awaiting delivery')}>
           pickup
         </button>
-        <button className='btn' onClick={() => updateDelivary('delivered')}>
+        <button
+          className='btn hover:border-slate-700  transform  hover:scale-125  transition duration-200 cursor-pointer  hover:bg-black  hover:text-white'
+          onClick={() => updateDelivary('delivered')}>
           deliver
         </button>
       </div>
