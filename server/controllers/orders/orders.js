@@ -113,13 +113,13 @@ async function assignDeliveryPartner(restaurantId, orderId, customerId) {
 
     while (partnerId === undefined && retryCount < 5) {
       retryCount++
-      console.log('retryCount:', retryCount, 'partnerId:', partnerId)
+      // console.log('retryCount:', retryCount, 'partnerId:', partnerId)
       partnerId = await findNearestDeliveryPartner(restaurantDetails[0])
     }
 
     retryCount = 0
     if (partnerId === undefined) {
-      console.log('cancelling order')
+      // console.log('cancelling order')
       await cancellOrder(orderId)
       const orderStatus = 'cancelled due to delivery unavailable'
       notifyRestaurant({ type: 'update', orderId, orderStatus, restaurantId })
