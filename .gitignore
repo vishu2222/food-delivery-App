@@ -6,6 +6,7 @@ server.csr
 server.key
 buildv1
 buildv2
+buildv3
 
 
 # Logs
