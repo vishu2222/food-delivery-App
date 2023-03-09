@@ -5,7 +5,10 @@ import Order from './Order'
 import { useNavigate } from 'react-router-dom'
 import { formatTime } from '../utlities/formateTime'
 
-const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
+// const serverUrl = process.env.NODE_ENV === 'production' ? 'http://65.1.86.68:8080/' : 'http://localhost:3000'
+const serverUrl = 'https://65.1.86.68:8080/'
+// const serverUrl = 'https://localhost:8080/'
+const socket = io(serverUrl, { autoConnect: false, transports: ['websocket'] })
 
 function RestaurantHome() {
   const [orders, setOrders] = useState([])

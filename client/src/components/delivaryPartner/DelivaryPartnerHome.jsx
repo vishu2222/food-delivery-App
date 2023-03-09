@@ -6,7 +6,10 @@ import { useNavigate } from 'react-router-dom'
 import Order from './Order'
 import { io } from 'socket.io-client'
 
-const socket = io('http://localhost:3000', { autoConnect: false, transports: ['websocket'] })
+// console.log('process.env.NODE_ENV === production', process.env.NODE_ENV === 'production', process.env.NODE_ENV)
+const serverUrl = 'https://65.1.86.68:8080/'
+// const serverUrl = 'https://localhost:8080/'
+const socket = io(serverUrl, { autoConnect: false, transports: ['websocket'] })
 
 function DelivaryPartnerHome() {
   const [orders, setOrders] = useState([])
