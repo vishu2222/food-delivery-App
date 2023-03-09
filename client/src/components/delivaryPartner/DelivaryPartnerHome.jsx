@@ -46,9 +46,12 @@ function DelivaryPartnerHome() {
       console.log('socket disconnected')
     })
 
-    socket.on('partner-update', (newOrder) => {
-      console.log('newOrder:', newOrder)
-      setOrders((current) => [newOrder, ...current])
+    socket.on('partner-update', (order) => {
+      console.log('order and status:', order, order.status)
+      if (order.status === 'awaiting pickup') {
+        setOrders((current) => [order, ...current])
+        return
+      }
     })
 
     // socket.emit('partnerLiveLocation', { lat, long }) // will emit only when partner moves
@@ -65,7 +68,7 @@ function DelivaryPartnerHome() {
       console.log('err:', err.message)
     }
 
-    const emitInterval = 1000 * 5
+    const emitInterval = 1000 * 2
 
     const interval = setInterval(() => {
       navigator.geolocation.getCurrentPosition(getMyPosition, error)
@@ -82,13 +85,13 @@ function DelivaryPartnerHome() {
   }, [lat, long])
 
   return (
-    <div className=' flex flex-col items-center bg-white h-screen'>
-      <h2 className='flex justify-center p-2 text-3xl font-extrabold'>ORDERS</h2>
-      <div className=' w-1/2 bg-green-50 p-2'>
+    <div className=' flex flex-col items-center bg-black h-screen'>
+      <h2 className='flex justify-center p-2 text-3xl font-extrabold text-white'>ORDERS</h2>
+      <div className=' w-1/2 p-2'>
         {orders.map((order, index) => {
           return (
-            <div key={index}>
-              <Order order={order} index={index} />
+            <div key={order.order_id} className=' bg-slate-100 mb-2'>
+              <Order order={order} />
             </div>
           )
         })}
