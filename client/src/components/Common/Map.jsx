@@ -9,7 +9,7 @@ const containerStyle = {
   height: '500px'
 }
 
-function MyComponent() {
+function Map() {
   const [partnerAssigned, setPartnerAssigned] = useState(false)
   const [directions, setDirections] = useState(null)
 
@@ -85,4 +85,4 @@ function MyComponent() {
   )
 }
 
-export default React.memo(MyComponent)
+export default React.memo(Map)
