@@ -95,7 +95,7 @@ function OrderDetails() {
   return (
     <div>
       <Nav />
-      <div className=' bg-slate-200 pb-32'>
+      <div className=' bg-slate-200 pb-32 '>
         <p className=' font-extrabold text-center text-3xl p-4'>Order details</p>
         <div className=' flex justify-center '>
           <div id='orderDetails' className=' p-4 px-10 text-lg font-serif font-medium bg-slate-300 mr-8 '>
@@ -118,7 +118,7 @@ function OrderDetails() {
           </div>
 
           {showMap && (
-            <div className=' p-4 border border-orange-900'>
+            <div className=' flex p-4 border border-orange-900 h-[50vh] w-full'>
               <Map />
             </div>
           )}

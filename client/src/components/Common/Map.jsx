@@ -5,8 +5,8 @@ import restaurantIcon from '../../icons/restaurant.png'
 import bikeIcon from '../../icons/bike.png'
 
 const containerStyle = {
-  width: '700px',
-  height: '500px'
+  width: '100%',
+  height: '100%'
 }
 
 function Map() {
@@ -50,7 +50,7 @@ function Map() {
   }
 
   return (
-    <GoogleMap mapContainerStyle={containerStyle} center={mapCenter} zoom={14}>
+    <GoogleMap mapContainerStyle={containerStyle} zoom={16} center={mapCenter}>
       <Marker id='customer' position={customerCenter}></Marker>
       <Marker
         id='restaurant'
