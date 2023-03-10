@@ -46,9 +46,9 @@ export default {
 
     io.on('connection', (socket) => {
       socket.on('partnerLiveLocation', async (location) => {
-        console.log('assignedPartnerMap:', assignedPartnerMap)
-        console.log('unassignedPartnerMap:', unassignedPartnerMap)
-        console.log('unassignedPartnerLocations:', unassignedPartnerLocations)
+        // console.log('assignedPartnerMap:', assignedPartnerMap)
+        // console.log('unassignedPartnerMap:', unassignedPartnerMap)
+        // console.log('unassignedPartnerLocations:', unassignedPartnerLocations)
 
         try {
           if (unassignedPartnerMap[socket.partnerId] === null) {
