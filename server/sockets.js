@@ -7,7 +7,7 @@ import { isPartnerAssigned } from './models/orders.js'
 let io
 export default {
   init: (httpServer) => {
-    io = new Server(httpServer, { cors: { origin: ['http://localhost:3001'] }, cookie: true, httpOnly: true })
+    io = new Server(httpServer, { cors: { origin: ['http://localhost:3000'] }, cookie: true, httpOnly: true })
 
     io.use(async (socket, next) => {
       try {
@@ -46,9 +46,9 @@ export default {
 
     io.on('connection', (socket) => {
       socket.on('partnerLiveLocation', async (location) => {
-        // console.log('assignedPartnerMap:', assignedPartnerMap)
-        // console.log('unassignedPartnerMap:', unassignedPartnerMap)
-        // console.log('unassignedPartnerLocations:', unassignedPartnerLocations)
+        console.log('assignedPartnerMap:', assignedPartnerMap)
+        console.log('unassignedPartnerMap:', unassignedPartnerMap)
+        console.log('unassignedPartnerLocations:', unassignedPartnerLocations)
 
         try {
           if (unassignedPartnerMap[socket.partnerId] === null) {
