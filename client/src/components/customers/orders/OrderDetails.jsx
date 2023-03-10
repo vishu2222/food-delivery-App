@@ -13,8 +13,8 @@ import {
 } from '../../../store/actions.js'
 import Map from '../../Common/Map.jsx'
 
-// const serverUrl = 'https://localhost:8080/'
-const serverUrl = 'https://65.1.86.68:8080/'
+const serverUrl = process.env.REACT_APP_ServerUrl
+
 const socket = io(serverUrl, { autoConnect: false, transports: ['websocket'] })
 
 function OrderDetails() {

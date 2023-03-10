@@ -7,8 +7,9 @@ import Order from './Order'
 import { io } from 'socket.io-client'
 
 // console.log('process.env.NODE_ENV === production', process.env.NODE_ENV === 'production', process.env.NODE_ENV)
-const serverUrl = 'https://65.1.86.68:8080/'
-// const serverUrl = 'https://localhost:8080/'
+
+const serverUrl = process.env.REACT_APP_ServerUrl
+
 const socket = io(serverUrl, { autoConnect: false, transports: ['websocket'] })
 
 function DelivaryPartnerHome() {
@@ -54,22 +55,20 @@ function DelivaryPartnerHome() {
       }
     })
 
-    // socket.emit('partnerLiveLocation', { lat, long }) // will emit only when partner moves
-
     function getMyPosition(position) {
       setLat(position.coords.latitude)
       setLong(position.coords.longitude)
       console.log(position.coords.latitude)
     }
-
     function error(err) {
       // need to handle error
       // err can occur due to internet disconnectivity
       console.log('err:', err.message)
     }
 
-    const emitInterval = 1000 * 4
+    // socket.emit('partnerLiveLocation', { lat, long }) // will emit only when partner moves
 
+    const emitInterval = 1000 * 4
     const interval = setInterval(() => {
       navigator.geolocation.getCurrentPosition(getMyPosition, error)
       socket.emit('partnerLiveLocation', { lat, long }) // will emit every specifed number of seconds
