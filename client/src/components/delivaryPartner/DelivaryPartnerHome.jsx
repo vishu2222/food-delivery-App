@@ -68,7 +68,7 @@ function DelivaryPartnerHome() {
       console.log('err:', err.message)
     }
 
-    const emitInterval = 1000 * 2
+    const emitInterval = 1000 * 4
 
     const interval = setInterval(() => {
       navigator.geolocation.getCurrentPosition(getMyPosition, error)
