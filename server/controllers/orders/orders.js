@@ -163,13 +163,13 @@ async function findNearestDeliveryPartner(restaurantDetails) {
     let max = Infinity
 
     // console.log('unassignedPartnerLocations1:', unassignedPartnerLocations)
-    for (let key of Object.keys(unassignedPartnerLocations)) {
+    for (let partner_id of Object.keys(unassignedPartnerLocations)) {
       // console.log('unassignedPartnerLocations2:', unassignedPartnerLocations)
 
-      let distance = getDistance(unassignedPartnerLocations[key], { latitude: lat, longitude: long })
+      let distance = getDistance(unassignedPartnerLocations[partner_id], { latitude: lat, longitude: long })
       if (distance < max) {
         max = distance
-        partnerId = key
+        partnerId = partner_id
       }
     }
 
