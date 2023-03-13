@@ -58,6 +58,13 @@ partner1 partner1
 - node, express, socket io server, postgressql
 - fake data loaded from faker.js
 
+![Screenshot from 2023-03-13 20-51-10](https://user-images.githubusercontent.com/90732088/224750960-a5a436a2-c9ee-4c21-9518-5de844d74e1b.png)
+
+![Screenshot from 2023-03-13 20-55-16](https://user-images.githubusercontent.com/90732088/224751004-0bc17b99-1d43-4da9-aa4b-393f8552f063.png)
+
+![Screenshot from 2023-03-13 20-55-46](https://user-images.githubusercontent.com/90732088/224751068-b798f38f-183c-4c59-a1f8-8b0dbec126fc.png)
+
+
 ### References:
 
 https://www.postgresql.org/docs/current/datatype-json.html
