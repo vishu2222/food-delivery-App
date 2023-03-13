@@ -7,6 +7,21 @@ food delivery app for placing and managing orders, assigning and tracking delive
 - AWS: https://65.1.86.68:8080
 - Render.com https://food-delivery-app-c86e.onrender.com (high down time and didnt have location access)
 
+#### sample login for customer
+
+id pwd
+customer1 customer1
+
+#### sample login for restaurant
+
+id pwd
+restaurant1 restaurant1
+
+#### sample login for delivery partner
+
+id pwd
+partner1 partner1
+
 ### To Run the app
 
 - clone the app
