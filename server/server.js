@@ -2,8 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import config from './config.js'
 import cookieParser from 'cookie-parser'
-import { createServer } from 'https'
-import fs from 'fs'
+// import { createServer } from 'https'
+import { createServer } from 'http'
+// import fs from 'fs'
 import socketSetup from './sockets.js'
 import { router as restaurantRouter } from './routes/restaurants.js'
 import { router as ordersRouter } from './routes/orders.js'
@@ -23,12 +24,14 @@ app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:8080'], crede
 app.use(express.json())
 app.use(cookieParser())
 
-const httpsOptions = {
-  key: fs.readFileSync('./server.key'),
-  cert: fs.readFileSync('./server.crt')
-}
+// const httpsOptions = {
+//   key: fs.readFileSync('./server.key'),
+//   cert: fs.readFileSync('./server.crt')
+// }
 
-const httpServer = createServer(httpsOptions, app)
+// const httpServer = createServer(httpsOptions, app)
+
+const httpServer = createServer(app)
 socketSetup.init(httpServer)
 
 const filePath = dirname(fileURLToPath(import.meta.url))
