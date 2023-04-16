@@ -1,6 +1,6 @@
 # food-delivery-App
 
-food delivery app for placing and managing orders, assigning and tracking delivery, notifying appropriate parties on change of order status. Requires google maps api key.
+Food delivery app for placing and managing orders, assigning and tracking delivery, notifying appropriate parties on change of order status. To test the app follow the below links. Note: google maps wont work as my google location service secret key is expired.
 
 ### Deployed at
 
@@ -10,23 +10,21 @@ food delivery app for placing and managing orders, assigning and tracking delive
 
 #### sample login for customer
 
-id pwd
-
-customer1 customer1
+   userName password
+   customer1 customer1
 
 #### sample login for restaurant
 
-id pwd
+   userName password
+   restaurant1 restaurant1
 
-restaurant1 restaurant1
 
 #### sample login for delivery partner
 
-id pwd
+     userName password
+     partner1 partner1
 
-partner1 partner1
-
-### To Run the app
+### To Run the app in local system
 
 - clone the app
 - cd server
