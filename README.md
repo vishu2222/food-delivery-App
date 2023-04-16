@@ -52,7 +52,8 @@ Food delivery app for placing and managing orders, assigning and tracking delive
      - didnt handle when customer adds food items from multiple restaurants for a single order on the front-end side
      - UI is not properly built for clients registration
      - when customers select their live address, his lat and long are saved in database as delivery location but not properly shown on the UI during        address selection
-     - items added to cart are not saved on database but in local storage, so doesnt work with multiple devices
+     - items added to cart are not saved on database but in local storage, so doesnt work with multiple devices.
+     - Logout is not yet implemented. Navigate back to login page to login with different user role 
 
 ### Technologies:
 
