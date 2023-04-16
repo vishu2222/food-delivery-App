@@ -1,4 +1,4 @@
-# food-delivery-App
+# Food-delivery-App
 
 Food delivery app for placing and managing orders, assigning and tracking delivery, notifying appropriate parties on change of order status. To test the app follow the below links. Note: google maps wont work as my google location service secret key is expired.
 
