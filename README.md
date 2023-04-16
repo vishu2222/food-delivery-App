@@ -6,7 +6,7 @@ Food delivery app for placing and managing orders, assigning and tracking delive
 
 
 - Render.com https://food-delivery-app-c86e.onrender.com (high down time, can take around 1min to load )
-- AWS: https://65.1.86.68:8080
+- AWS: https://65.1.86.68:8080 (less downtime but as no domain name is registered, your browser will give warning and ask your permission to allow connection)
 
 #### sample login for customer
 
@@ -26,39 +26,39 @@ Food delivery app for placing and managing orders, assigning and tracking delive
 
 ### To Run the app in local system
 
-- clone the app
-- cd server
-- npm install
-- Setup postgress server and database schema (/server/models/schema/schema.sql)
-- add env variables PORT(server port), DB_CONN_STRING, MAP_KEY(google maps key), NODE_ENV = 'development'
-- node server.js
+     - clone the app
+     - cd server
+     - npm install
+     - Setup postgress server and database schema (/server/models/schema/schema.sql)
+     - add env variables PORT(server port), DB_CONN_STRING, MAP_KEY(google maps key), NODE_ENV = 'development'
+     - node server.js
 
-### features
+### APP Features
 
-- login for customers, restaurants, delivery agents on the same page
-- session authorization
-- customers can select a restaurant add items to cart, select saved address or add current location and place order
-- restaurants get notifications
-- customers get notified when restaurant accepts, delivery-assigned, pick-up and delivery
-- delivery agent get notified on assignment, pickup and delivery
-- customer can track location of the delivery-agent on google maps.
-- works with multiple customers, delivery partners and restaurants
-- a delivery partner assigned for delivery will be unavailable for new assignents untill current order is delivered
+     - login for customers, restaurants, delivery agents on the same page
+     - session authorization
+     - customers can select a restaurant add items to cart, select saved address or add current location and place order
+     - restaurants get notifications
+     - customers get notified when restaurant accepts, delivery-assigned, pick-up and delivery
+     - delivery agent get notified on assignment, pickup and delivery
+     - customer can track location of the delivery-agent on google maps.
+     - works with multiple customers, delivery partners and restaurants
+     - A delivery partner assigned for delivery will be unavailable for new assignents untill current order is delivered
 
 ### limitations
 
-- not suaitable for production
-- doesnt work with same client logging through multiple devices
-- didnt handle when customer adds food items from multiple restaurants for a single order on the front-end side
-- UI is not properly built for clients registration
-- when customers select their live address, his lat and long are saved in database as delivery location but not properly shown on the UI during address selection
-- items added to cart are not saved on database but in local storage, so doesnt work with multiple devices
+     - not suaitable for production
+     - doesnt work with same client logging through multiple devices
+     - didnt handle when customer adds food items from multiple restaurants for a single order on the front-end side
+     - UI is not properly built for clients registration
+     - when customers select their live address, his lat and long are saved in database as delivery location but not properly shown on the UI during        address selection
+     - items added to cart are not saved on database but in local storage, so doesnt work with multiple devices
 
 ### Technologies:
 
-- React, tailwind, chakra-UI, google-maps, socket-io client, React-Redux, geolocation api
-- node, express, socket io server, postgressql
-- fake data loaded from faker.js
+     - React, tailwind, chakra-UI, google-maps, socket-io client, React-Redux, geolocation api
+     - node, express, socket io server, postgressql
+     - fake data loaded from faker.js
 
 ### screen shots
 
