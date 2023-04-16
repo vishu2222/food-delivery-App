@@ -42,34 +42,55 @@ function Login() {
   }
 
   return (
-    <div className=' flex justify-center items-center  bg-orange-50 pt-72 pb-96 '>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <div className='mb-4' id='userName'>
-          <label className='labels'> User Name </label>
-          <input className='bg-slate-100 border-4 w-60' type='text' onChange={(e) => setuserName(e.target.value)} />
-        </div>
+    <>
+      <div className=' flex justify-center items-center  bg-orange-50 pt-72 pb-96 '>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div className='mb-4' id='userName'>
+            <label className='labels'> User Name </label>
+            <input className='bg-slate-100 border-4 w-60' type='text' onChange={(e) => setuserName(e.target.value)} />
+          </div>
 
-        <div className='mb-4'>
-          <label className='labels mr-3'> Password </label>
-          <input
-            className='bg-slate-100 border-4 w-60 ml-1'
-            type='password'
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+          <div className='mb-4'>
+            <label className='labels mr-3'> Password </label>
+            <input
+              className='bg-slate-100 border-4 w-60 ml-1'
+              type='password'
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-        <button className='btn w-60 ml-28' onClick={signIn}>
-          Sign In
-        </button>
-        <p className=' text-red-800 ml-28'>{errMsg}</p>
-        <h3 className='mt-10'>
-          New User?
-          <Link className='btn ml-2 ' to='/register'>
-            sign up
-          </Link>
-        </h3>
-      </form>
-    </div>
+          <button className='btn w-60 ml-28' onClick={signIn}>
+            Sign In
+          </button>
+          <p className=' text-red-800 ml-28'>{errMsg}</p>
+          <h3 className='mt-10'>
+            New User?
+            <Link className='btn ml-2 ' to='/register'>
+              sign up
+            </Link>
+          </h3>
+          <div className='border-b-2 m-auto mb-2'>
+            <p className='text-2xl font-mono font-extrabold '>Test login for customer</p>
+            <p>
+              <span className=' text-xl font-semibold'>UserName:</span> customer1
+              <span className=' text-xl font-semibold'> password:</span> customer1
+            </p>
+
+            <p className='text-2xl font-mono font-extrabold '>Test login for Restaurant</p>
+            <p>
+              <span className=' text-xl font-semibold'>UserName:</span> restaurant1
+              <span className=' text-xl font-semibold'> password:</span> restaurant1
+            </p>
+
+            <p className='text-2xl font-mono font-extrabold '>Test login for customer</p>
+            <p>
+              <span className=' text-xl font-semibold'>UserName:</span> partner1
+              <span className=' text-xl font-semibold'> password:</span> partner1
+            </p>
+          </div>
+        </form>
+      </div>
+    </>
   )
 }
 
