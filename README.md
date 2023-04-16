@@ -5,7 +5,7 @@ Food delivery app for placing and managing orders, assigning and tracking delive
 ### Deployed at
 
 
-- Render.com https://food-delivery-app-c86e.onrender.com (high down time )
+- Render.com https://food-delivery-app-c86e.onrender.com (high down time, can take around 1min to load )
 - AWS: https://65.1.86.68:8080
 
 #### sample login for customer
