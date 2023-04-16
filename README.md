@@ -10,13 +10,13 @@ Food delivery app for placing and managing orders, assigning and tracking delive
 
 #### sample login for customer
 
-   userName password
-   customer1 customer1
+     userName password
+     customer1 customer1
 
 #### sample login for restaurant
 
-   userName password
-   restaurant1 restaurant1
+     userName password
+     restaurant1 restaurant1
 
 
 #### sample login for delivery partner
