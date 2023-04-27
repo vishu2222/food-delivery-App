@@ -2,11 +2,9 @@
 
 Food delivery app for placing and managing orders, assigning and tracking delivery, notifying appropriate parties on change of order status. To test the app follow the below links. Note: google maps wont work as my google location service secret key is expired.
 
-### Deployed at
+### Hoisted on Render.com 
 
-
-- Render.com https://food-delivery-app-c86e.onrender.com (high down time, can take around 1min to load )
-- AWS: https://65.1.86.68:8080 (less downtime but as no domain name is registered, your browser will give warning and ask your permission to allow connection)
+- https://food-delivery-app-c86e.onrender.com (high down time, can take around 1min to load )
 
 #### sample login for customer
 
