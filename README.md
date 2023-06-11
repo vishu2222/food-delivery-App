@@ -1,26 +1,6 @@
 # Food-delivery-App
 
-Food delivery app for placing and managing orders, assigning and tracking delivery, notifying appropriate parties on change of order status. To test the app follow the below links. Note: google maps wont work as my google location service secret key is expired.
-
-### Hoisted on Render.com 
-
-- https://food-delivery-app-c86e.onrender.com (high down time, can take around 1min to load )
-
-#### sample login for customer
-
-     userName password
-     customer1 customer1
-
-#### sample login for restaurant
-
-     userName password
-     restaurant1 restaurant1
-
-
-#### sample login for delivery partner
-
-     userName password
-     partner1 partner1
+Food delivery app for placing and managing orders, assigning and tracking delivery, notifying appropriate parties on change of order status. 
 
 ### To Run the app in local system
 
